@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   
+  resources :students
   resources :client_accounts
   resources :users
   # Routing logic: fallback requests for React Router.
