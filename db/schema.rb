@@ -10,28 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_01_24_043254) do
+ActiveRecord::Schema.define(version: 2022_01_24_060807) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "client_accounts", force: :cascade do |t|
     t.boolean "recieve_notifications"
-    t.bigint "user_id", null: false
     t.float "balance"
+    t.integer "status"
+    t.bigint "user_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["user_id"], name: "index_client_accounts_on_user_id"
-  end
-
-  create_table "students", force: :cascade do |t|
-    t.integer "gender"
-    t.date "birthdate"
-    t.bigint "user_id", null: false
-    t.integer "status"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["user_id"], name: "index_students_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -44,11 +35,10 @@ ActiveRecord::Schema.define(version: 2022_01_24_043254) do
     t.string "city"
     t.string "state"
     t.string "zip_code"
-    t.integer "role", default: 0
+    t.integer "role"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
 
   add_foreign_key "client_accounts", "users"
-  add_foreign_key "students", "users"
 end
