@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   
+  resources :course_sections
   resources :courses
   resources :students
   resources :order_items
