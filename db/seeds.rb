@@ -7,8 +7,8 @@
 #   Character.create(name: 'Luke', movie: movies.first)
 require 'faker'
 
-10.times do |i| 
-  User.create!(
+
+client1 = User.create!(
     first_name: Faker::Name.unique.first_name, 
     last_name: Faker::Name.unique.last_name,
     primary_email: Faker::Internet.safe_email,
@@ -19,4 +19,29 @@ require 'faker'
     zip_code: Faker::Address.zip_code,
     role: 0
  )
-end
+
+instructor1 = User.create!(
+    first_name: Faker::Name.unique.first_name, 
+    last_name: Faker::Name.unique.last_name,
+    primary_email: Faker::Internet.unique.safe_email,
+    primary_phone: Faker::PhoneNumber.unique.phone_number,
+    address: Faker::Address.unique.street_address,
+    city: Faker::Address.city,
+    state: Faker::Address.state_abbr,
+    zip_code: Faker::Address.zip_code,
+    role: 1
+ )
+
+ admin1 = User.create!(
+  first_name: Faker::Name.unique.first_name, 
+  last_name: Faker::Name.unique.last_name,
+  primary_email: Faker::Internet.unique.safe_email,
+  primary_phone: Faker::PhoneNumber.unique.phone_number,
+  address: Faker::Address.unique.street_address,
+  city: Faker::Address.city,
+  state: Faker::Address.state_abbr,
+  zip_code: Faker::Address.zip_code,
+  role: 2
+)
+
+
