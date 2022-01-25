@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_01_24_233308) do
+ActiveRecord::Schema.define(version: 2022_01_25_001627) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -81,6 +81,15 @@ ActiveRecord::Schema.define(version: 2022_01_24_233308) do
     t.index ["client_account_id"], name: "index_payments_on_client_account_id"
   end
 
+  create_table "student_sections", force: :cascade do |t|
+    t.bigint "student_id", null: false
+    t.bigint "course_section_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["course_section_id"], name: "index_student_sections_on_course_section_id"
+    t.index ["student_id"], name: "index_student_sections_on_student_id"
+  end
+
   create_table "students", force: :cascade do |t|
     t.integer "gender"
     t.date "birth_date"
@@ -112,5 +121,7 @@ ActiveRecord::Schema.define(version: 2022_01_24_233308) do
   add_foreign_key "order_items", "orders"
   add_foreign_key "orders", "client_accounts"
   add_foreign_key "payments", "client_accounts"
+  add_foreign_key "student_sections", "course_sections"
+  add_foreign_key "student_sections", "students"
   add_foreign_key "students", "client_accounts"
 end
