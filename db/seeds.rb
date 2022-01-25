@@ -20,6 +20,9 @@ client1 = User.create!(
     role: 0
  )
 
+ client1.create_client_account!(recieve_notificatio
+  ns:true, balance:102.35, status:1)
+
 instructor1 = User.create!(
     first_name: Faker::Name.unique.first_name, 
     last_name: Faker::Name.unique.last_name,
