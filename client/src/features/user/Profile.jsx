@@ -5,6 +5,7 @@ const Profile = () => {
   return (
     <Container>
       <Row>Change</Row>
+      <Row>Row 2</Row>
     </Container>
   );
 }
