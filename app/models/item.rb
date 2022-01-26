@@ -1,4 +1,4 @@
 class Item < ApplicationRecord
-  enum type: [:course, :materials]
+  enum item_type: [:course, :materials]
 
 end
