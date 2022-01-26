@@ -1,8 +1,10 @@
 import './App.css';
 import { Routes, Route, BrowserRouter } from 'react-router-dom';
-import Profile from '../Profile/Profile';
+import Profile from '../features/user/Profile';
 
 function App() {
+
+
   return (
     <BrowserRouter>
       <Routes>
