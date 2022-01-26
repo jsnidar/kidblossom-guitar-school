@@ -4,7 +4,7 @@ const Profile = () => {
 
   return (
     <Container>
-      <Row>Hello</Row>
+      <Row>Development</Row>
     </Container>
   );
 }
