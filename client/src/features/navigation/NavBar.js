@@ -10,7 +10,6 @@ const NavBar = ({ logOut, currentUser }) => {
       {customStyles}
         <Container>
           <Navbar.Brand href="/">
-            {currentUser.name}
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
