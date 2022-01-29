@@ -22,6 +22,7 @@ const SignUp = ({ logIn }) => {
     zip_code: '',
     password: '',
     password_confirmation: '',
+    receive_notifications: false
   })
   let navigate = useNavigate()
 
@@ -44,6 +45,9 @@ const SignUp = ({ logIn }) => {
         zip_code: formData.zip_code,
         password: formData.password,
         password_confirmation: formData.password_confirmation,
+      },
+      client_account: {
+        receive_notifications: formData.receive_notifications
       }
     }
     fetch('/users', {
@@ -65,6 +69,7 @@ const SignUp = ({ logIn }) => {
     })
   }
 
+  console.log(formData)
   return (
     <div>
     {customStyles}
@@ -199,13 +204,25 @@ const SignUp = ({ logIn }) => {
               </Form.Group>
             </Col>
           </Row>
-          <Button 
-            variant="yellow" 
-            type="submit"
-            onClick={e => handleSignUpSubmit(e)}
-          >
-            Submit
-          </Button>
+          <Row>
+            <Form.Group>
+              <Form.Label>Would you like to receive email notifications from KidBlossom of upcoming events and promotions?</Form.Label>
+              <Form.Switch 
+                label={formData.receive_notifications ? "Yes, I would like to receive email notifications." : "No, I do not want to receive email notifications."}
+                checked={formData.receive_notifications}
+                onChange={() => setFormData({...formData, receive_notifications: !formData.receive_notifications})}
+              />
+            </Form.Group>
+          </Row>
+          <Row>
+            <Button 
+              variant="yellow" 
+              type="submit"
+              onClick={e => handleSignUpSubmit(e)}
+            >
+              Submit
+            </Button>
+          </Row>
         </Form> 
       </Container>
     </div>
