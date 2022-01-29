@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import 'react-phone-number-input/style.css'
 import PhoneInput from 'react-phone-number-input'
 import UsStateDropdown from './UsStateDropdown';
+import { customStyles } from '../../Globals';
 
 const SignUp = ({ logIn }) => {
 
@@ -67,6 +68,7 @@ const SignUp = ({ logIn }) => {
 
   return (
     <div>
+    {customStyles}
       <Container>
         <br></br>
         <Form>
@@ -199,7 +201,7 @@ const SignUp = ({ logIn }) => {
             </Col>
           </Row>
           <Button 
-            variant="warning" 
+            variant="blue" 
             type="submit"
             onClick={e => handleSignUpSubmit(e)}
           >
