@@ -11,14 +11,22 @@ export const getToken = () => {
 
 export const customStyles = <style type="text/css">
 {`
-.btn-blue {
-  background-color: #112B80;
+.btn-yellow {
+  background-color: #f3b700;
   color: white;
+  margin: 1rem;
+  width: fit-content
 }
-.btn-blue-outline {
-  color: #112B80;
+
+{/* .btn-blue:hover {
+  color: #f3b700
+} */}
+
+.btn-yellow-outline {
+  color: #f3b700;
   border-style: solid;
-  border-color: #112B80
+  border-color: #112B80;
+  width: fit-content;
 }
 `}
 </style>

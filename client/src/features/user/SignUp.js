@@ -200,7 +200,7 @@ const SignUp = ({ logIn }) => {
             </Col>
           </Row>
           <Button 
-            variant="blue" 
+            variant="yellow" 
             type="submit"
             onClick={e => handleSignUpSubmit(e)}
           >
