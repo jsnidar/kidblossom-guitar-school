@@ -8,50 +8,50 @@
 require 'faker'
 
 
-client1 = User.create!(
-    first_name: Faker::Name.unique.first_name, 
-    last_name: Faker::Name.unique.last_name,
-    primary_email: Faker::Internet.safe_email,
-    primary_phone: Faker::PhoneNumber.phone_number,
-    address: Faker::Address.street_address,
-    city: Faker::Address.city,
-    state: Faker::Address.state_abbr,
-    zip_code: Faker::Address.zip_code,
-    role: 0
- )
+# client1 = User.create!(
+#     first_name: Faker::Name.unique.first_name, 
+#     last_name: Faker::Name.unique.last_name,
+#     primary_email: Faker::Internet.safe_email,
+#     primary_phone: Faker::PhoneNumber.phone_number,
+#     address: Faker::Address.street_address,
+#     city: Faker::Address.city,
+#     state: Faker::Address.state_abbr,
+#     zip_code: Faker::Address.zip_code,
+#     role: 0
+#  )
 
-client_account_1 = client1.create_client_account!(recieve_notifications:true, balance:102.35, status:1)
-student_1 = client1.client_account.students.create!(first_name: Faker::Name.unique.first_name, last_name: client1.last_name, birth_date:"20120425", gender:1)
+# client_account_1 = client1.create_client_account!(recieve_notifications:true, balance:102.35, status:1)
+# student_1 = client1.client_account.students.create!(first_name: Faker::Name.unique.first_name, last_name: client1.last_name, birth_date:"20120425", gender:1)
 
-# 30_min_priv_lesson = Item.create!(name: "30 minute private lesson", item_type:0, price:147)
+# # 30_min_priv_lesson = Item.create!(name: "30 minute private lesson", item_type:0, price:147)
 
-# 15_min_priv_lesson = Item.create!(name: "15 minute private lesson", item_type:0, price:92)
+# # 15_min_priv_lesson = Item.create!(name: "15 minute private lesson", item_type:0, price:92)
 
-# group_lesson = Item.create!(name: "30 minute group lesson", item_type:0, price:92)
+# # group_lesson = Item.create!(name: "30 minute group lesson", item_type:0, price:92)
 
-instructor1 = User.create!(
-    first_name: Faker::Name.unique.first_name, 
-    last_name: Faker::Name.unique.last_name,
-    primary_email: Faker::Internet.unique.safe_email,
-    primary_phone: Faker::PhoneNumber.unique.phone_number,
-    address: Faker::Address.unique.street_address,
-    city: Faker::Address.city,
-    state: Faker::Address.state_abbr,
-    zip_code: Faker::Address.zip_code,
-    role: 1
- )
+# instructor1 = User.create!(
+#     first_name: Faker::Name.unique.first_name, 
+#     last_name: Faker::Name.unique.last_name,
+#     primary_email: Faker::Internet.unique.safe_email,
+#     primary_phone: Faker::PhoneNumber.unique.phone_number,
+#     address: Faker::Address.unique.street_address,
+#     city: Faker::Address.city,
+#     state: Faker::Address.state_abbr,
+#     zip_code: Faker::Address.zip_code,
+#     role: 1
+#  )
 
- admin1 = User.create!(
-  first_name: Faker::Name.unique.first_name, 
-  last_name: Faker::Name.unique.last_name,
-  primary_email: Faker::Internet.unique.safe_email,
-  primary_phone: Faker::PhoneNumber.unique.phone_number,
-  address: Faker::Address.unique.street_address,
-  city: Faker::Address.city,
-  state: Faker::Address.state_abbr,
-  zip_code: Faker::Address.zip_code,
-  role: 2
-)
+#  admin1 = User.create!(
+#   first_name: Faker::Name.unique.first_name, 
+#   last_name: Faker::Name.unique.last_name,
+#   primary_email: Faker::Internet.unique.safe_email,
+#   primary_phone: Faker::PhoneNumber.unique.phone_number,
+#   address: Faker::Address.unique.street_address,
+#   city: Faker::Address.city,
+#   state: Faker::Address.state_abbr,
+#   zip_code: Faker::Address.zip_code,
+#   role: 2
+# )
 
 
 
