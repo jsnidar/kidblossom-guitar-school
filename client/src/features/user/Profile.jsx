@@ -1,13 +1,10 @@
 
 import { Container, Row } from "react-bootstrap";
-import LogIn from "./LogIn";
 
-const Profile = ({ currentUser, logIn }) => {
+const Profile = ({ currentUser }) => {
 
   return (
     <Container>
-    { currentUser ?
-      <>
         <Row className='pt-2'>
           <h1>Welcome {currentUser.first_name} {currentUser.last_name}</h1>
         </Row>
@@ -22,8 +19,6 @@ const Profile = ({ currentUser, logIn }) => {
         </Row>
         <Row>
         </Row>  
-      </>
-      : <LogIn logIn={logIn} /> }
     </Container>
   );
 }
