@@ -6,7 +6,7 @@ const Profile = ({ currentUser, logIn }) => {
 
   return (
     <Container>
-    { currentUser.id ?
+    { currentUser ?
       <>
         <Row className='pt-2'>
           <h1>Welcome {currentUser.first_name} {currentUser.last_name}</h1>

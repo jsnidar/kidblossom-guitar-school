@@ -60,7 +60,6 @@ const SignUp = ({ logIn }) => {
         })
         .then(navigate('/'))
       }else{
-        
         res.json().then(e => setErrors(e))
       }
     })
@@ -144,7 +143,7 @@ const SignUp = ({ logIn }) => {
                 <Form.Label>Phone Number</Form.Label>
                 <PhoneInput
                   defaultCountry="US"
-                  international="false"
+                  international={false}
                   placeholder="Enter phone number"
                   value={formData.primary_phone}
                   onChange={(e) => setFormData({...formData, primary_phone: e})}
