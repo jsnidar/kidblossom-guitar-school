@@ -16,7 +16,7 @@ ActiveRecord::Schema.define(version: 2022_01_26_223203) do
   enable_extension "plpgsql"
 
   create_table "client_accounts", force: :cascade do |t|
-    t.boolean "recieve_notifications"
+    t.boolean "receive_notifications"
     t.float "balance"
     t.integer "status"
     t.bigint "user_id", null: false
