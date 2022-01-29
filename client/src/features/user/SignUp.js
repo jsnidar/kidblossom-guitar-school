@@ -57,9 +57,9 @@ const SignUp = ({ logIn }) => {
           logIn(data.user)
           localStorage.setItem("jwt", data.token)
         })
-
         .then(navigate('/'))
       }else{
+        
         res.json().then(e => setErrors(e))
       }
     })
@@ -72,7 +72,7 @@ const SignUp = ({ logIn }) => {
         <Form>
           <Row>
             <h1>Sign Up</h1>
-            { errors ? <ErrorAlert errors={errors.errors} /> : null }
+            { errors ? <ErrorAlert errors={errors} /> : null }
           </Row>
           <Row>
             <Col>
