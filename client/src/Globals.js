@@ -8,3 +8,17 @@ export const getToken = () => {
     'Authorization': `bearer ${ localStorage.getItem('jwt') }`
   }
 }
+
+export const customStyles = <style type="text/css">
+{`
+.btn-blue {
+  background-color: #112B80;
+  color: white;
+}
+.btn-blue-outline {
+  color: #112B80;
+  border-style: solid;
+  border-color: #112B80
+}
+`}
+</style>
