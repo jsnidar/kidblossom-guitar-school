@@ -17,7 +17,7 @@ const NavBar = ({ logOut, currentUser }) => {
               <Nav.Link href="/">Home</Nav.Link>
               <Nav.Link href="/signup">Sign Up</Nav.Link>
               <Nav.Link href="/login">Log In</Nav.Link>
-              <Button variant="blue-outline" onClick={logOut}>
+              <Button variant="yellow-outline" onClick={logOut}>
                 Logout
               </Button>
             </Nav>
