@@ -15,7 +15,9 @@ function App() {
   const [ loggedIn, setLoggedIn ] = useState(false)
 
   const logIn = (user) => {
-    setCurrentUser(user)
+    debugger
+    const formattedUser = user.data ? {...user.data.attributes, client_account: user.included[0].attributes} : {}
+    setCurrentUser(formattedUser)
     setLoggedIn(true)
   }
 
@@ -39,6 +41,9 @@ function App() {
         .then(user => logIn(user))
     }
   },[loggedIn])
+
+  console.log(currentUser)
+
   return (
     <>
       <NavBar logOut={logOut} currentUser={currentUser} />

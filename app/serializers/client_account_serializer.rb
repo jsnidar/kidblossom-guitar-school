@@ -1,4 +1,8 @@
-class ClientAccountSerializer < ActiveModel::Serializer
-  attributes :id, :recieve_notifications, :balance, :status
-  has_one :user
+class ClientAccountSerializer
+  include JSONAPI::Serializer
+  attributes :balance, :id, :status, :receive_notifications
+
+  belongs_to :user
+  has_many :students
+
 end
