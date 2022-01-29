@@ -11,3 +11,11 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+h1 {
+  color: #112B80;
+  font-weight: bolder;
+  font-family: 'Palanquin', sans-serif;
+}
+
+
