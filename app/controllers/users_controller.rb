@@ -5,6 +5,8 @@ class UsersController < ApplicationController
     @user.role = 0
 
     if @user.save
+      # Should I create the associated account here or should that happen through the client_account controller? 
+      @user.create_client_account(client_params)
       @token = encode_token({ user_id: @user.id })
       render json: { user: @user, token: @token }, status: :created
     else
@@ -36,6 +38,10 @@ class UsersController < ApplicationController
         :state, 
         :zip_code
       )
+    end
+
+    def client_params
+      params.require(:client_account).permit(:receive_notifications)
     end
 =begin
     params = {
