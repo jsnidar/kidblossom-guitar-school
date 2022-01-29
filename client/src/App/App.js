@@ -8,6 +8,7 @@ import { useDispatch } from 'react-redux';
 import { userAdded } from '../features/user/usersSlice';
 import { headers, getToken } from '../Globals';
 import LogIn from '../features/user/LogIn';
+import Home from './Home';
 
 function App() {
   const [ currentUser, setCurrentUser ] = useState({})
@@ -24,7 +25,6 @@ function App() {
     localStorage.removeItem('jwt');
   }
 
-  console.log(currentUser)
   useEffect(() => {
     const token = localStorage.getItem('jwt')
     if(token && !loggedIn) {
@@ -46,9 +46,11 @@ function App() {
         <Routes>
           <Route 
             path='/' 
-            element={
-              <Profile logIn={logIn} currentUser={currentUser} />
-            } 
+            element={ loggedIn && currentUser ? <Profile
+             loggedIn={loggedIn} 
+             logIn={logIn} 
+             currentUser={currentUser}
+            /> : <Home />}
           />
           <Route 
             path='/signup' 
