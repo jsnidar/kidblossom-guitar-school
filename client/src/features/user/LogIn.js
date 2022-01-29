@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Form, Container, Row, Col, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import ErrorAlert from '../../App/ErrorAlert';
-import { headers } from '../../Globals';
+import { headers, customStyles } from '../../Globals';
 
 const LogIn = ({ logIn }) => {
 
@@ -44,7 +44,9 @@ const LogIn = ({ logIn }) => {
     }
 
   return (
+
     <Container>
+    {customStyles}
       <Form className='p-2'>
         <Row>
           <h1>Log In</h1>
@@ -75,7 +77,7 @@ const LogIn = ({ logIn }) => {
           </Col>
         </Row>
         <Button 
-          variant="warning" 
+          variant="blue" 
           type="submit"
           onClick={e => handleLogInSubmit(e)}
         >
