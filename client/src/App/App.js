@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { userAdded } from '../features/user/usersSlice';
 import { headers, getToken } from '../Globals';
+import LogIn from '../features/user/LogIn';
 
 function App() {
   const [ currentUser, setCurrentUser ] = useState({})
@@ -46,13 +47,19 @@ function App() {
           <Route 
             path='/' 
             element={
-              <Profile />
+              <Profile logIn={logIn} currentUser={currentUser} />
             } 
           />
           <Route 
             path='/signup' 
             element={
               <SignUp logIn={logIn} />
+            } 
+          />
+          <Route 
+            path='/login' 
+            element={
+              <LogIn logIn={logIn} />
             } 
           />
         </Routes>

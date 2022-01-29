@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Form, Container, Row, Col } from 'react-bootstrap';
-// import ErrorAlert from './ErrorAlert';
+import ErrorAlert from '../../App/ErrorAlert';
 import { useNavigate } from 'react-router-dom';
 import 'react-phone-number-input/style.css'
 import PhoneInput from 'react-phone-number-input'
@@ -8,7 +8,7 @@ import UsStateDropdown from './UsStateDropdown';
 
 const SignUp = ({ logIn }) => {
 
-  // const [errors, setErrors] = useState(null)
+  const [errors, setErrors] = useState(null)
   const [formData, setFormData ] = useState({
     first_name: '', 
     last_name: '',
@@ -29,14 +29,13 @@ const SignUp = ({ logIn }) => {
   }
   const handleSignUpSubmit = (e) => {
     e.preventDefault()
-    // setErrors(null)
-    //can't this just be formData?
+    setErrors(null)
     const strongParams = {
       user: {
         first_name: formData.first_name,
         last_name: formData.last_name,
-        primary_email: formData.email,
-        primary_email_confirmation: formData.email_confirmation,
+        primary_email: formData.primary_email,
+        primary_email_confirmation: formData.primary_email_confirmation,
         primary_phone: formData.primary_phone,
         address: formData.address,
         city: formData.city,
@@ -61,7 +60,7 @@ const SignUp = ({ logIn }) => {
 
         .then(navigate('/'))
       }else{
-        // res.json().then(e => setErrors(e))
+        res.json().then(e => setErrors(e))
       }
     })
   }
@@ -73,7 +72,7 @@ const SignUp = ({ logIn }) => {
         <Form>
           <Row>
             <h1>Sign Up</h1>
-            {/* { errors ? <ErrorAlert errors={errors.errors} /> : null } */}
+            { errors ? <ErrorAlert errors={errors.errors} /> : null }
           </Row>
           <Row>
             <Col>
