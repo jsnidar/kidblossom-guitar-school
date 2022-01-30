@@ -8,7 +8,6 @@ class UsersController < ApplicationController
       # Should I create the associated account here or should that happen through the client_account controller? 
       @user.create_client_account(client_params)
       @token = encode_token({ user_id: @user.id })
-      byebug
       render json: { user: UserSerializer.new(@user, include: [:client_account]).serializable_hash, token: @token }, status: :created
     else
       render json: @user.errors.full_messages, status: :unprocessable_entity
