@@ -12,6 +12,9 @@ const NavBar = ({ logOut, loggedIn }) => {
 
   const loggedInLinks = <>
     <Nav.Link href="/">Home</Nav.Link>
+    <Button variant="yellow-outline" onClick={logOut}>
+      Logout
+    </Button>
   </>
   
   return (
@@ -24,9 +27,6 @@ const NavBar = ({ logOut, loggedIn }) => {
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav>
               { loggedIn ? loggedInLinks : loggedOutLinks }
-              <Button variant="yellow-outline" onClick={logOut}>
-                Logout
-              </Button>
             </Nav>
           </Navbar.Collapse>
         </Container>
