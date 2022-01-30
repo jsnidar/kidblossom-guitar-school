@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import 'react-phone-number-input/style.css'
 import { customStyles, headers, getToken } from '../../Globals';
 
-const NewStudentForm = ({ }) => {
+const NewStudentForm = () => {
 
   const [errors, setErrors] = useState(null)
   const [formData, setFormData ] = useState({
