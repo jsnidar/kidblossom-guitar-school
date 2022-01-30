@@ -15,7 +15,7 @@ function App() {
   const [ loggedIn, setLoggedIn ] = useState(false)
 
   const logIn = (user) => {
-    debugger
+    console.log(user)
     const formattedUser = user.data ? {...user.data.attributes, client_account: user.included[0].attributes} : {}
     setCurrentUser(formattedUser)
     setLoggedIn(true)
@@ -46,7 +46,7 @@ function App() {
 
   return (
     <>
-      <NavBar logOut={logOut} currentUser={currentUser} />
+      <NavBar loggedIn={loggedIn} logOut={logOut} currentUser={currentUser} />
       <BrowserRouter>
         <Routes>
           <Route 
