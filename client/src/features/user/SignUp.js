@@ -52,7 +52,7 @@ const SignUp = ({ logIn }) => {
     }
     fetch('/users', {
       method: "POST",
-      headers: {'Content-Type':'application/json'},
+      headers: headers,
       body:JSON.stringify(strongParams)
     })
     .then(res => {
