@@ -9,16 +9,16 @@ import { userAdded } from '../features/user/usersSlice';
 import { headers, getToken } from '../Globals';
 import LogIn from '../features/user/LogIn';
 import Home from './Home';
+import { current } from '@reduxjs/toolkit';
 
 function App() {
   const [ currentUser, setCurrentUser ] = useState({})
   const [ loggedIn, setLoggedIn ] = useState(false)
 
   const logIn = (user) => {
-    console.log(user)
     const formattedUser = user.data && user.data.attributes ? {...user.data.attributes, client_account: user.included[0].attributes} : {}
     setCurrentUser(formattedUser)
-    setLoggedIn(true)
+    setLoggedIn(user)
   }
 
   const logOut = () => {
@@ -42,7 +42,8 @@ function App() {
     }
   },[loggedIn])
 
-  console.log(currentUser)
+  console.log("loggedIn: ", loggedIn)
+  console.log("currentUser: ", currentUser)
 
   return (
     <>
