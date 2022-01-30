@@ -15,11 +15,11 @@ const NewStudentForm = ({ }) => {
     gender: '',
   })
   let navigate = useNavigate()
-
+  
   const handleChange = (e) => {
     setFormData({...formData, [e.target.id]: e.target.value})
   }
-  const handleSignUpSubmit = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault()
     setErrors(null)
     const strongParams = {
@@ -27,20 +27,22 @@ const NewStudentForm = ({ }) => {
         first_name: formData.first_name,
         last_name: formData.last_name,
         birth_date: formData.birth_date,
-        gender: formData.gender  
+        gender: parseInt(formData.gender, 10)  
       },
     }
     fetch('/students', {
       method: "POST",
-      headers: {'Content-Type':'application/json'},
+      headers: {
+        ...headers,
+        ...getToken()
+      },
       body:JSON.stringify(strongParams)
     })
     .then(res => {
       if(res.ok){
         res.json()
         .then(data => {
-          // logIn(data.user)
-          localStorage.setItem("jwt", data.token)
+          debugger
         })
         .then(navigate('/'))
       }else{
@@ -101,8 +103,8 @@ const NewStudentForm = ({ }) => {
                 <Form.Label>Gender</Form.Label>
                 <Form.Select value={formData.gender} onChange={handleChange}>
                   <option>Select gender</option>
-                  <option>Male</option>
-                  <option>Female</option>
+                  <option value="1" >Male</option>
+                  <option value="0" >Female</option>
                 </Form.Select>
               </Form.Group>
             </Col>
@@ -111,7 +113,7 @@ const NewStudentForm = ({ }) => {
             <Button 
               variant="yellow" 
               type="submit"
-              onClick={e => handleSignUpSubmit(e)}
+              onClick={e => handleSubmit(e)}
             >
               Submit
             </Button>

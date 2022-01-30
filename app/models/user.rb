@@ -6,5 +6,5 @@ class User < ApplicationRecord
   validates :primary_email, confirmation: true, uniqueness: true
   validates :first_name, :last_name, :primary_email_confirmation, :address, :city, :state, :zip_code, presence: true
 
-  has_one :client_account
+  has_one :client_account,  dependent: :destroy
 end
