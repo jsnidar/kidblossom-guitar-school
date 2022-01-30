@@ -3,7 +3,7 @@ import { Button, Form, Container, Row, Col } from 'react-bootstrap';
 import ErrorAlert from '../../App/ErrorAlert';
 import { useNavigate } from 'react-router-dom';
 import 'react-phone-number-input/style.css'
-import { customStyles } from '../../Globals';
+import { customStyles, headers, getToken } from '../../Globals';
 
 const NewStudentForm = ({ }) => {
 
