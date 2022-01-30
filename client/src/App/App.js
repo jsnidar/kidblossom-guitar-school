@@ -16,7 +16,7 @@ function App() {
 
   const logIn = (user) => {
     console.log(user)
-    const formattedUser = user.data ? {...user.data.attributes, client_account: user.included[0].attributes} : {}
+    const formattedUser = user.data.attributes ? {...user.data.attributes, client_account: user.included[0].attributes} : {}
     setCurrentUser(formattedUser)
     setLoggedIn(true)
   }
