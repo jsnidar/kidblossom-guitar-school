@@ -7,10 +7,14 @@ import PhoneInput from 'react-phone-number-input'
 import UsStateDropdown from './UsStateDropdown';
 import { customStyles } from '../../Globals';
 import { headers, baseUrl } from '../../Globals';
+import { useDispatch, useSelector } from 'react-redux';
+import { userLoggedIn, setErrors } from './userSlice';
 
-const SignUp = ({ logIn }) => {
+const SignUp = () => {
 
-  const [errors, setErrors] = useState(null)
+  const errors = useSelector(state => state.user.errors)
+  const dispatch = useDispatch()
+
   const [formData, setFormData ] = useState({
     first_name: '', 
     last_name: '',
@@ -32,7 +36,6 @@ const SignUp = ({ logIn }) => {
   }
   const handleSignUpSubmit = (e) => {
     e.preventDefault()
-    setErrors(null)
     const strongParams = {
       user: {
         first_name: formData.first_name,
@@ -60,12 +63,12 @@ const SignUp = ({ logIn }) => {
       if(res.ok){
         res.json()
         .then(data => {
-          logIn(data.user)
+          userLoggedIn(data.user)
           localStorage.setItem("jwt", data.token)
         })
         .then(navigate('/'))
       }else{
-        res.json().then(e => setErrors(e))
+        res.json().then(e => dispatch(setErrors(e)))
       }
     })
   }

@@ -3,27 +3,23 @@ import { Routes, Route, BrowserRouter } from 'react-router-dom';
 import Profile from '../features/user/Profile';
 import NavBar from '../features/navigation/NavBar';
 import SignUp from '../features/user/SignUp';
-import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { userAdded } from '../features/user/usersSlice';
+import { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { headers, getToken, baseUrl } from '../Globals';
 import LogIn from '../features/user/LogIn';
 import Home from './Home';
-import { current } from '@reduxjs/toolkit';
+import { userLoggedIn, userLogout } from "../features/user/userSlice";
+
 
 function App() {
-  const [ currentUser, setCurrentUser ] = useState({})
-  const [ loggedIn, setLoggedIn ] = useState(false)
 
-  const logIn = (user) => {
-    // const formattedUser = user.data ? {...user.data.attributes} : {}
-    setCurrentUser(user)
-    setLoggedIn(user)
-  }
+  const loggedIn = useSelector(state => state.user.loggedIn)
+  const user = useSelector(state => state.user.entities[0])
+  const dispatch = useDispatch()
 
+  console.log(user)
   const logOut = () => {
-    setCurrentUser({});
-    setLoggedIn(false);
+    dispatch(userLogout(user.id));
     localStorage.removeItem('jwt');
   }
 
@@ -38,36 +34,31 @@ function App() {
         }
       })
         .then(resp => resp.json())
-        .then(user => logIn(user))
+        .then(user => dispatch(userLoggedIn(user)))
     }
-  },[loggedIn])
-
-  console.log("loggedIn: ", loggedIn)
-  console.log("currentUser: ", currentUser)
+  },[loggedIn, dispatch])
 
   return (
     <>
-      <NavBar loggedIn={loggedIn} logOut={logOut} currentUser={currentUser} />
+      <NavBar loggedIn={loggedIn} logOut={logOut} />
       <BrowserRouter>
         <Routes>
           <Route 
             path='/' 
-            element={ loggedIn && currentUser ? <Profile
+            element={ loggedIn && user ? <Profile
              loggedIn={loggedIn} 
-             logIn={logIn} 
-             currentUser={currentUser}
             /> : <Home />}
           />
           <Route 
             path='/signup' 
             element={
-              <SignUp logIn={logIn} />
+              <SignUp />
             } 
           />
           <Route 
             path='/login' 
             element={
-              <LogIn loggedIn={loggedIn} currentUser={currentUser} logIn={logIn} />
+              <LogIn loggedIn={loggedIn} />
             } 
           />
         </Routes>

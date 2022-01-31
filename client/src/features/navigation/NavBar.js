@@ -3,7 +3,7 @@ import { Container, Navbar, Nav, Button } from 'react-bootstrap';
 import { customStyles } from '../../Globals';
 
 const NavBar = ({ logOut, loggedIn }) => {
-
+    
   const loggedOutLinks = <>
     <Nav.Link href="/">Home</Nav.Link>
     <Nav.Link href="/signup">Sign Up</Nav.Link>

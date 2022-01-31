@@ -2,12 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { Form, Container, Row, Col, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import ErrorAlert from '../../App/ErrorAlert';
-import { headers, customStyles, baseUrl } from '../../Globals';
+import { useDispatch, useSelector } from 'react-redux';
+import { customStyles } from '../../Globals';
+import { logInFetch } from './userSlice';
 
-const LogIn = ({ logIn, loggedIn }) => {
+const LogIn = () => {
+
+  const errors = useSelector(state => state.user.errors)
+  const loggedIn = useSelector(state => state.user.loggedIn)
 
   let navigate = useNavigate()
-  const [errors, setErrors] = useState(null)
+  const dispatch = useDispatch()
+
   const [formData, setFormData ] = useState({
     password: '',
     primary_email: ''
@@ -22,31 +28,16 @@ const LogIn = ({ logIn, loggedIn }) => {
     setFormData({...formData, [e.target.id]: e.target.value})
   }
 
+
   const handleLogInSubmit = e => {
     e.preventDefault();
-
     const strongParams = {
       ...formData
     }
-
-    fetch(baseUrl + '/login', {
-      method: "POST",
-      headers,
-      body: JSON.stringify(strongParams)
-    })
-      .then(res => {
-        if(res.ok) {
-          res.json()
-          .then(data => {
-            logIn(data.user);
-            localStorage.setItem('jwt', data.token)
-            navigate('/')
-          })
-        }else{
-          res.json().then(e => setErrors(e))
-        }
-      })
-    }
+    dispatch(logInFetch(strongParams))
+  }
+  
+    
 
   return (
 

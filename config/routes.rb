@@ -8,7 +8,15 @@ Rails.application.routes.draw do
   resources :items
   resources :orders
   resources :client_accounts
-  resources :users
+  
+  
+  resources :users do
+    resources :client_acounts do
+      resources :students
+    end
+  end
+
+  
 
   get "/get-current-user" => "sessions#get_current_user"
   post "/login" => "sessions#login"
