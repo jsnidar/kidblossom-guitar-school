@@ -10,7 +10,7 @@ Rails.application.routes.draw do
   resources :client_accounts
   resources :users
 
-  get "/current-user" => "sessions#get_current_user"
+  get "/get-current-user" => "sessions#get_current_user"
   post "/login" => "sessions#login"
 
   # Routing logic: fallback requests for React Router.
