@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Form, Container, Row, Col, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import ErrorAlert from '../../App/ErrorAlert';
-import { headers, customStyles } from '../../Globals';
+import { headers, customStyles, baseUrl } from '../../Globals';
 
-const LogIn = ({ logIn }) => {
+const LogIn = ({ logIn, loggedIn }) => {
 
   let navigate = useNavigate()
   const [errors, setErrors] = useState(null)
@@ -13,6 +13,11 @@ const LogIn = ({ logIn }) => {
     primary_email: ''
   })
 
+  useEffect (() => {
+    if (loggedIn) {
+      navigate('/')
+    }
+  }, [loggedIn, navigate])
   const handleChange = (e) => {
     setFormData({...formData, [e.target.id]: e.target.value})
   }
@@ -24,7 +29,7 @@ const LogIn = ({ logIn }) => {
       ...formData
     }
 
-    fetch('/login', {
+    fetch(baseUrl + '/login', {
       method: "POST",
       headers,
       body: JSON.stringify(strongParams)

@@ -6,7 +6,7 @@ import 'react-phone-number-input/style.css'
 import PhoneInput from 'react-phone-number-input'
 import UsStateDropdown from './UsStateDropdown';
 import { customStyles } from '../../Globals';
-import { headers } from '../../Globals';
+import { headers, baseUrl } from '../../Globals';
 
 const SignUp = ({ logIn }) => {
 
@@ -51,7 +51,7 @@ const SignUp = ({ logIn }) => {
         receive_notifications: formData.receive_notifications
       }
     }
-    fetch('/users', {
+    fetch(baseUrl + '/users', {
       method: "POST",
       headers: headers,
       body:JSON.stringify(strongParams)

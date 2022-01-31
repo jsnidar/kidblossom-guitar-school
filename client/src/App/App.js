@@ -6,7 +6,7 @@ import SignUp from '../features/user/SignUp';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { userAdded } from '../features/user/usersSlice';
-import { headers, getToken } from '../Globals';
+import { headers, getToken, baseUrl } from '../Globals';
 import LogIn from '../features/user/LogIn';
 import Home from './Home';
 import { current } from '@reduxjs/toolkit';
@@ -16,8 +16,8 @@ function App() {
   const [ loggedIn, setLoggedIn ] = useState(false)
 
   const logIn = (user) => {
-    const formattedUser = user.data && user.data.attributes ? {...user.data.attributes, client_account: user.included[0].attributes} : {}
-    setCurrentUser(formattedUser)
+    // const formattedUser = user.data ? {...user.data.attributes} : {}
+    setCurrentUser(user)
     setLoggedIn(user)
   }
 
@@ -30,7 +30,7 @@ function App() {
   useEffect(() => {
     const token = localStorage.getItem('jwt')
     if(token && !loggedIn) {
-      fetch('/current-user', {
+      fetch(baseUrl + '/get-current-user', {
         method: "GET",
         headers: {
           ...headers,
@@ -67,7 +67,7 @@ function App() {
           <Route 
             path='/login' 
             element={
-              <LogIn logIn={logIn} />
+              <LogIn loggedIn={loggedIn} currentUser={currentUser} logIn={logIn} />
             } 
           />
         </Routes>
