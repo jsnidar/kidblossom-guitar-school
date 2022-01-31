@@ -21,6 +21,8 @@ gem 'jwt'
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
 
+gem 'validates_timeliness', '~> 6.0.0.beta2'
+
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.4.4', require: false
 
