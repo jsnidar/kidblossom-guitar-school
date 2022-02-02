@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Container, Row, Col, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import ErrorAlert from '../../App/ErrorAlert';
+import ErrorAlert from '../../errorHandling/ErrorAlert';
 import { useDispatch, useSelector } from 'react-redux';
 import { customStyles } from '../../Globals';
 import { logInFetch } from './userSlice';
 
 const LogIn = () => {
 
-  const errors = useSelector(state => state.user.errors)
+  const errors = useSelector(state => state.errors.entities)
   const loggedIn = useSelector(state => state.user.loggedIn)
 
   let navigate = useNavigate()
@@ -46,7 +46,7 @@ const LogIn = () => {
       <Form className='p-2'>
         <Row>
           <h1>Log In</h1>
-          { errors ? <ErrorAlert errors={errors.errors} /> : null }
+          { errors.length > 0 ? <ErrorAlert errors={errors.errors} /> : null }
         </Row>
         <Row>
           <Col>
