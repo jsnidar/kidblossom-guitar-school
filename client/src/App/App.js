@@ -5,10 +5,10 @@ import NavBar from '../features/navigation/NavBar';
 import SignUp from '../features/user/SignUp';
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { headers, getToken, baseUrl } from '../Globals';
 import LogIn from '../features/user/LogIn';
 import Home from './Home';
-import { userLoggedIn, userLogout } from "../features/user/userSlice";
+import { verifyLoggedIn, userLogout } from "../features/user/userSlice";
+
 
 
 function App() {
@@ -17,7 +17,6 @@ function App() {
   const user = useSelector(state => state.user.entities[0])
   const dispatch = useDispatch()
 
-  console.log(user)
   const logOut = () => {
     dispatch(userLogout(user.id));
     localStorage.removeItem('jwt');
@@ -26,15 +25,7 @@ function App() {
   useEffect(() => {
     const token = localStorage.getItem('jwt')
     if(token && !loggedIn) {
-      fetch(baseUrl + '/get-current-user', {
-        method: "GET",
-        headers: {
-          ...headers,
-          ...getToken()
-        }
-      })
-        .then(resp => resp.json())
-        .then(user => dispatch(userLoggedIn(user)))
+      dispatch(verifyLoggedIn(token))
     }
   },[loggedIn, dispatch])
 
