@@ -7,4 +7,5 @@ class User < ApplicationRecord
   validates :first_name, :last_name, :primary_email_confirmation, :address, :city, :state, :zip_code, presence: true
 
   has_one :client_account,  dependent: :destroy
+  has_many :students, through: :client_account
 end
