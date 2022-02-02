@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Form, Container, Row, Col } from 'react-bootstrap';
-import ErrorAlert from '../../App/ErrorAlert';
+import ErrorAlert from '../../errorHandling/ErrorAlert';
 import { useNavigate } from 'react-router-dom';
 import 'react-phone-number-input/style.css'
 import PhoneInput from 'react-phone-number-input'
@@ -8,11 +8,12 @@ import UsStateDropdown from './UsStateDropdown';
 import { customStyles } from '../../Globals';
 import { headers, baseUrl } from '../../Globals';
 import { useDispatch, useSelector } from 'react-redux';
-import { userLoggedIn, setErrors } from './userSlice';
+import { userLoggedIn} from './userSlice';
+import { setErrors } from '../../errorHandling/errorsSlice';
 
 const SignUp = () => {
 
-  const errors = useSelector(state => state.user.errors)
+  const errors = useSelector(state => state.errors.entities)
   const dispatch = useDispatch()
 
   const [formData, setFormData ] = useState({
@@ -73,7 +74,6 @@ const SignUp = () => {
     })
   }
 
-  console.log(formData)
   return (
     <div>
     {customStyles}
@@ -82,7 +82,7 @@ const SignUp = () => {
         <Form>
           <Row>
             <h1>Sign Up</h1>
-            { errors ? <ErrorAlert errors={errors} /> : null }
+            { errors.length > 0 ? <ErrorAlert errors={errors} /> : null }
           </Row>
           <Row>
             <Col>
