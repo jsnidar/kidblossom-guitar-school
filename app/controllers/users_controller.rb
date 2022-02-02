@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
   skip_before_action :authorized, only: [:create]
+
   def create
     @user = User.new(user_params)
     @user.role = 0
@@ -9,6 +10,7 @@ class UsersController < ApplicationController
       @user.create_client_account(client_params)
       @token = encode_token({ user_id: @user.id })
       render json: { user: @user, token: @token }, status: :created
+
     else
       render json: @user.errors.full_messages, status: :unprocessable_entity
     end
