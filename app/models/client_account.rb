@@ -5,6 +5,10 @@ class ClientAccount < ApplicationRecord
   enum status: [:current, :delinquent, :suspended, :inactive]
   belongs_to :user
   has_many :students
+
+  def client_students
+    self.students
+  end
   
 
   def set_defaults
