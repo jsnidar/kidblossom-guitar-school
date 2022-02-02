@@ -1,20 +1,20 @@
 Rails.application.routes.draw do
   
-  resources :student_sections
-  resources :course_sections
-  resources :courses
-  resources :students
-  resources :order_items
-  resources :items
-  resources :orders
-  resources :client_accounts
-  
   
   resources :users do
     resources :client_acounts do
       resources :students
     end
+  
   end
+  
+  resources :client_accounts
+
+  resources :students 
+  
+  resources :student_sections
+  resources :course_sections
+  resources :courses
 
   
 
