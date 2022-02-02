@@ -3,7 +3,8 @@ export const headers = {
   "Content-Type": "application/json"
 }
 
-export const baseUrl = "http://localhost:3000"
+// export const baseUrl = "http://localhost:3000"
+export const baseUrl = "https://kidblossom-guitar-school.herokuapp.com"
 
 export const getToken = () => {
   return {
