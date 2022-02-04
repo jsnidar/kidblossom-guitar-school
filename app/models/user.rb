@@ -8,4 +8,6 @@ class User < ApplicationRecord
 
   has_one :client_account,  dependent: :destroy
   has_many :students, through: :client_account
+  has_many :courses
+
 end
