@@ -16,7 +16,7 @@ const studentsSlice = createSlice({
       state.status = "loading"
     },
     studentsFetched(state, action) {
-      state.entities = action.payload;
+      action.payload ? state.entities  = action.payload : state.entities = [];
     },
     studentAdded(state, action) {
       state.entities.push(action.payload)
