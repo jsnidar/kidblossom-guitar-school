@@ -3,8 +3,8 @@ export const headers = {
   "Content-Type": "application/json"
 }
 
-// export const baseUrl = "http://localhost:3000"
-export const baseUrl = "https://kidblossom-guitar-school.herokuapp.com"
+export const baseUrl = "http://localhost:3000"
+// export const baseUrl = "https://kidblossom-guitar-school.herokuapp.com"
 
 export const getToken = () => {
   return {
@@ -33,3 +33,67 @@ export const customStyles = <style type="text/css">
 }
 `}
 </style>
+
+export const formatCourse = (courseObj) => {
+  const formattedCourse = {...courseObj}
+  switch (courseObj.meeting_day) {
+    case "sunday":
+      formattedCourse.meeting_day = "0";
+      break;
+    case "monday":
+      formattedCourse.meeting_day = "1";
+      break;
+    case "tuesday":
+      formattedCourse.meeting_day = "2";
+      break;
+    case "wednesday":
+      formattedCourse.meeting_day = "3";
+      break;
+    case "thursday":
+      formattedCourse.meeting_dayay = "4";
+      break;
+    case "friday":
+      formattedCourse.meeting_day = "5";
+      break;
+    case "saturday":
+      formattedCourse.meeting_day = "6";
+      break;
+    default:
+      formattedCourse.meeting_day = "";
+  }
+  switch(courseObj.name) {
+    case "group_lesson_30_min":
+      formattedCourse.name = "0";
+      break;
+    case "group_lesson_15_min":
+      formattedCourse.name = "1";
+      break;
+    case "private_lesson_30_min":
+      formattedCourse.name = "2";
+      break;
+    default:
+      formattedCourse.name = "";
+  }
+  switch(courseObj.status) {
+    case "current":
+      formattedCourse.status = "0";
+      break;
+    case "completed":
+      formattedCourse.status = "1";
+      break;
+    default: 
+      formattedCourse.status = ""
+  }
+  switch(courseObj.setting) {
+    case "online":
+      formattedCourse.setting = "0";
+      break;
+    case "in_person":
+      formattedCourse.setting = "1";
+      break;
+    default:
+      formattedCourse.setting = "";
+  }
+  debugger
+  return formattedCourse
+}
