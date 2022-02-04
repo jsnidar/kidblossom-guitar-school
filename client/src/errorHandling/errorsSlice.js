@@ -8,10 +8,10 @@ const errorsSlice = createSlice({
   },
   reducers: {
     setErrors(state, action) {
-      state.errors = action.payload
+      state.entities = action.payload
     },
     resetErrors(state, action) {
-      state.errors = []
+      state.entities = []
     },
   },
 });
