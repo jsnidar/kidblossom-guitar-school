@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { baseUrl, headers, getToken } from "../../Globals";
 import { setErrors } from "../../errorHandling/errorsSlice";
 import { studentsFetched } from "../students/studentsSlice";
+import { coursesFetched } from "../courses/coursesSlice";
 
 export function logInFetch(strongParams) {
   return function (dispatch) {
@@ -46,10 +47,10 @@ export function verifyLoggedIn() {
     .then(res => {
       if(res.ok) {
         res.json()
-        .then(user => {
-          console.log(user)
-          dispatch(userLoggedIn(user));
-          dispatch(studentsFetched(user.students))
+        .then(data => {
+          dispatch(userLoggedIn(data.user));
+          dispatch(studentsFetched(data.students))
+          dispatch(coursesFetched(data.courses))
           dispatch(setErrors([]))
         })
       }else{
@@ -80,6 +81,7 @@ const userSlice = createSlice({
     },
     userLoggedIn(state, action) {
       state.entities.push({
+        id: action.payload.id,
         first_name: action.payload.first_name,
         last_name: action.payload.last_name,
         primary_email: action.payload.primary_email,

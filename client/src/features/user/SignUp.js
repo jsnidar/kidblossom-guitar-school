@@ -10,6 +10,8 @@ import { headers, baseUrl } from '../../Globals';
 import { useDispatch, useSelector } from 'react-redux';
 import { userLoggedIn} from './userSlice';
 import { setErrors } from '../../errorHandling/errorsSlice';
+import { studentsFetched } from '../students/studentsSlice';
+import { coursesFetched } from '../courses/coursesSlice';
 
 const SignUp = () => {
 
@@ -65,6 +67,8 @@ const SignUp = () => {
         res.json()
         .then(data => {
           userLoggedIn(data.user)
+          dispatch(studentsFetched(data.students))
+          dispatch(coursesFetched(data.courses))
           localStorage.setItem("jwt", data.token)
         })
         .then(navigate('/'))
