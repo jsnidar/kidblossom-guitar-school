@@ -12,6 +12,7 @@ const NavBar = ({ logOut, loggedIn }) => {
 
   const loggedInLinks = <>
     <Nav.Link href="/">Home</Nav.Link>
+    <Nav.Link href="/courses">Classes</Nav.Link>
     <Button variant="yellow-outline" onClick={logOut}>
       Logout
     </Button>
