@@ -108,7 +108,6 @@ const StudentForm = ({ setShowStudentForm, studentToEdit }) => {
     studentToEdit ? studentPatch(strongParams) : studentPost(strongParams)
   }
 
-  console.log(formData)
   return (
     <div>
     {customStyles}
