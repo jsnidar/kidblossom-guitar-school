@@ -8,6 +8,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import LogIn from '../features/user/LogIn';
 import Home from './Home';
 import { verifyLoggedIn, userLogout } from "../features/user/userSlice";
+import CoursesContainer from '../features/courses/CoursesContainer';
 
 
 
@@ -50,6 +51,12 @@ function App() {
             path='/login' 
             element={
               <LogIn loggedIn={loggedIn} />
+            } 
+          />
+          <Route 
+            path='/courses' 
+            element={
+              <CoursesContainer />
             } 
           />
         </Routes>
