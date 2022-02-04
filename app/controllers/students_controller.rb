@@ -26,6 +26,7 @@ class StudentsController < ApplicationController
 
   private
 
+  # I need to rethink this logic for admin and instructor roles
   def set_student
     @student = @user.students.find(params[:id])
   end
