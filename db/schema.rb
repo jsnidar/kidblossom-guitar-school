@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_01_26_223203) do
+ActiveRecord::Schema.define(version: 2022_02_02_225254) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -25,26 +25,18 @@ ActiveRecord::Schema.define(version: 2022_01_26_223203) do
     t.index ["user_id"], name: "index_client_accounts_on_user_id"
   end
 
-  create_table "course_sections", force: :cascade do |t|
-    t.date "start_date"
-    t.date "end_date"
-    t.integer "meeting_day"
-    t.time "start_time"
-    t.time "end_time"
-    t.integer "status"
-    t.integer "setting"
-    t.bigint "user_id", null: false
-    t.bigint "course_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["course_id"], name: "index_course_sections_on_course_id"
-    t.index ["user_id"], name: "index_course_sections_on_user_id"
-  end
-
   create_table "courses", force: :cascade do |t|
     t.integer "name"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "duration"
+    t.date "start_date"
+    t.integer "meeting_day"
+    t.time "start_time"
+    t.integer "status"
+    t.integer "setting"
+    t.bigint "user_id", null: false
+    t.index ["user_id"], name: "index_courses_on_user_id"
   end
 
   create_table "items", force: :cascade do |t|
@@ -83,15 +75,13 @@ ActiveRecord::Schema.define(version: 2022_01_26_223203) do
     t.index ["client_account_id"], name: "index_payments_on_client_account_id"
   end
 
-  create_table "student_sections", force: :cascade do |t|
-    t.bigint "user_id", null: false
+  create_table "student_courses", force: :cascade do |t|
     t.bigint "student_id", null: false
-    t.bigint "course_section_id", null: false
+    t.bigint "course_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["course_section_id"], name: "index_student_sections_on_course_section_id"
-    t.index ["student_id"], name: "index_student_sections_on_student_id"
-    t.index ["user_id"], name: "index_student_sections_on_user_id"
+    t.index ["course_id"], name: "index_student_courses_on_course_id"
+    t.index ["student_id"], name: "index_student_courses_on_student_id"
   end
 
   create_table "students", force: :cascade do |t|
@@ -121,14 +111,12 @@ ActiveRecord::Schema.define(version: 2022_01_26_223203) do
   end
 
   add_foreign_key "client_accounts", "users"
-  add_foreign_key "course_sections", "courses"
-  add_foreign_key "course_sections", "users"
+  add_foreign_key "courses", "users"
   add_foreign_key "order_items", "items"
   add_foreign_key "order_items", "orders"
   add_foreign_key "orders", "client_accounts"
   add_foreign_key "payments", "client_accounts"
-  add_foreign_key "student_sections", "course_sections"
-  add_foreign_key "student_sections", "students"
-  add_foreign_key "student_sections", "users"
+  add_foreign_key "student_courses", "courses"
+  add_foreign_key "student_courses", "students"
   add_foreign_key "students", "client_accounts"
 end
