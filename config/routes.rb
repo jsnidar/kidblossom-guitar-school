@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   
   
+  resources :student_courses
   resources :users do
     resources :client_acounts do
       resources :students
@@ -12,8 +13,6 @@ Rails.application.routes.draw do
 
   resources :students 
   
-  resources :student_sections
-  resources :course_sections
   resources :courses
 
   
