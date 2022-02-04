@@ -3,5 +3,6 @@ class UserSerializer < ActiveModel::Serializer
 
   has_one :client_account
   has_many :students, through: :client_account
+  has_many :courses
 
 end
