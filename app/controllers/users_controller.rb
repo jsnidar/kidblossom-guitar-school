@@ -1,6 +1,14 @@
 class UsersController < ApplicationController
   skip_before_action :authorized, only: [:create]
 
+  def index
+    if @user.role == 2
+      users = User.all
+      render json: {users: users}
+    else 
+      render json: { errors: ['Unauthorized']}, status: :unauthorized
+    end
+  
   def create
     @user = User.new(user_params)
     @user.role = 0
@@ -43,7 +51,8 @@ class UsersController < ApplicationController
         :address, 
         :city, 
         :state, 
-        :zip_code
+        :zip_code,
+        :role
       )
     end
 
