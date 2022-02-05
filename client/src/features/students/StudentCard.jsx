@@ -5,7 +5,7 @@ import { useState } from "react"
 import { customStyles } from "../../Globals"
 import { useDispatch } from "react-redux"
 import { studentRemoved, studentActionLoading } from "./studentsSlice"
-import { baseUrl, headers, getToken } from "../../Globals";
+import { baseUrl, headers, getToken, formatDate } from "../../Globals";
 
 
 const StudentCard = ({ student }) => {
@@ -35,8 +35,7 @@ const StudentCard = ({ student }) => {
       <Col>
         Gender: {student.gender}
         <br></br>
-        {/* Reformat this Jan 12, 2033 */}
-        Birthdate: {student.birth_date}
+        Birthdate: {formatDate(student.birth_date).toDateString()}
       </Col>
       <Col>
         
