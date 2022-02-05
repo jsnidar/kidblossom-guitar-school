@@ -15,8 +15,7 @@ const StudentForm = ({ setShowStudentForm, studentToEdit }) => {
 
   const dispatch = useDispatch()
   const errors = useSelector(state => state.errors.entities)
-  //This could create bugs later when I have admin roles, because the user they are looking at won't always be the first one
-  const client_account = useSelector(state => state.user.entities[0].client_account.id)
+  const client_account = useSelector(state => state.user.currentUser.client_account.id)
   
   const [formData, setFormData ] = useState( studentToEdit ? {...studentToEdit, gender: "male" ? 1 : 0 } : {
     first_name: '', 
