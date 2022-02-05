@@ -46,7 +46,8 @@ const CourseForm = ({ setShowCourseForm, courseToEdit }) => {
         res.json()
         .then(data => {
           dispatch(courseAdded(data.course))
-          setShowCourseForm(false);
+          setShowCourseForm(false)
+          dispatch(setErrors([]));
         })
       }else{
         res.json().then(errors => {
@@ -74,6 +75,7 @@ const CourseForm = ({ setShowCourseForm, courseToEdit }) => {
         .then(data => {
           dispatch(courseUpdated(data.course))
           setShowCourseForm(false);
+          dispatch(setErrors([]))
         })
       }else{
         res.json().then(errors => {
