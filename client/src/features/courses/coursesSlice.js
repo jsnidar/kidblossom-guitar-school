@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { formatCourse, formatDate } from "../../Globals";
+import { setErrors } from "../../errorHandling/errorsSlice";
 
 
 
