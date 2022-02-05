@@ -1,8 +1,8 @@
 import { Container, Col, Row, Button } from "react-bootstrap"
 import CourseForm from "./CourseForm"
 import { useState } from "react"
-import { customStyles } from "../../Globals"
-import { useDispatch } from "react-redux"
+import { customStyles, formatDate } from "../../Globals"
+import { useDispatch, useSelector } from "react-redux"
 import { courseRemoved, courseActionLoading } from "./coursesSlice"
 import { baseUrl, headers, getToken } from "../../Globals";
 
@@ -10,6 +10,7 @@ import { baseUrl, headers, getToken } from "../../Globals";
 const CourseCard = ({ course }) => {
 
   const [ editCourse, setEditCourse ] = useState(false)
+  const user = useSelector(state => state.user.entities[0])
   const dispatch = useDispatch()
 
   const handleRemoveCourse = () => {
@@ -33,16 +34,19 @@ const CourseCard = ({ course }) => {
     name[name.length - 1] = "Minutes"
     return name.join(" ")
   }
+
+  const capitalizeWord = (word) => word.charAt(0).toUpperCase() + word.slice(1)
+
   const displayCourseInfo = <Container>
     {customStyles}
     <Row className='border p-1 m-1'>
       <h3 className='border-bottom'>{formatCourseName(course.name)}</h3>
       <Col>
         <p>
-          Meeting Day: {course.meeting_day}
+          Meeting Day: {capitalizeWord(course.meeting_day)}
         </p>
         <p>
-          Start Date: {new Date(course.start_date).toDateString()}
+          Start Date: {formatDate(course.start_date).toDateString()}
         </p>
         <p>
           Time: {formattedTimeString}
@@ -50,10 +54,13 @@ const CourseCard = ({ course }) => {
       </Col>
       <Col>
         <p>
-          Class Setting: {course.setting}
+          Instructor: {capitalizeWord(user.first_name)} {capitalizeWord(user.last_name)}
         </p>
         <p>
-          Class Status: {course.status}
+          Class Setting: {capitalizeWord(course.setting)}
+        </p>
+        <p>
+          Class Status: {capitalizeWord(course.status)}
         </p>
       </Col>
       <Row className="justify-content-evenly">
