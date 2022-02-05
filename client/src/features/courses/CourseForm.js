@@ -8,7 +8,6 @@ import { courseAdded, courseUpdated, courseFetchRejected, courseActionLoading } 
 import { setErrors } from '../../errorHandling/errorsSlice';
 import ErrorAlert from '../../errorHandling/ErrorAlert';
 import Datetime from "react-datetime"
-import moment from 'moment';
 
 const CourseForm = ({ setShowCourseForm, courseToEdit }) => {
 
@@ -85,7 +84,6 @@ const CourseForm = ({ setShowCourseForm, courseToEdit }) => {
     })
   }
 
-  console.log(formData)
   const handleCancel = () => {
     setFormData({
       name: "",
@@ -194,7 +192,7 @@ const CourseForm = ({ setShowCourseForm, courseToEdit }) => {
                 timeConstraints={{minutes: {step: 5}}}
                 dateFormat={false}
                 onChange={handleChange}
-                
+                value={formData.start_time}
                />
             </Form.Group>
             </Col>
