@@ -20,10 +20,13 @@ export function logInFetch(strongParams) {
       if(res.ok) {
         res.json()
         .then(data => {
-          dispatch(userLoggedIn(data.user));
-          dispatch(studentsFetched(data.user.students))
-          dispatch(setErrors([]))
           localStorage.setItem('jwt', data.token)
+          dispatch(userLoggedIn(data.user));
+          if (data.users) {
+            usersFetched(data.users)
+          }
+          dispatch(studentsFetched(data.students))
+          dispatch(setErrors([]))
         })
       }else{
         res.json().then(errors => {
@@ -49,10 +52,14 @@ export function verifyLoggedIn() {
         res.json()
         .then(data => {
           dispatch(userLoggedIn(data.user));
+          if (data.users) {
+            usersFetched(data.users)
+          }
           dispatch(studentsFetched(data.students))
           dispatch(coursesFetched(data.courses))
           dispatch(setErrors([]))
         })
+        debugger
       }else{
         res.json().then(errors => {
           dispatch(userFetchRejected())
@@ -62,13 +69,12 @@ export function verifyLoggedIn() {
     })
   }
 }
-
-
   
 const userSlice = createSlice({
   name: 'user',
   initialState: {
     entities: [],
+    currentUser: {},
     status: 'idle',
     loggedIn: false,
   },
@@ -79,33 +85,34 @@ const userSlice = createSlice({
     userFetchRejected(state, action) {
       state.status = "rejected"
     },
+    usersFetched(state, action) {
+      state.entities = action.payload;
+    },
     userLoggedIn(state, action) {
-      state.entities.push({
+      state.currentUser = {
         id: action.payload.id,
         first_name: action.payload.first_name,
         last_name: action.payload.last_name,
         primary_email: action.payload.primary_email,
-        primary_email_confirmation: action.payload.primary_email_confirmation,
         primary_phone: action.payload.primary_phone,
         address: action.payload.address,
         city: action.payload.city,
         state: action.payload.state,
         zip_code: action.payload.zip_code,
-        password: action.payload.password,
-        password_confirmation: action.payload.password_confirmation,
-        client_account: action.payload.client_account
-      });
+        client_account: action.payload.client_account,
+        role: action.payload.role
+      };
       state.status = "idle"
       state.loggedIn = true
     },
     userLogout(state, action) {
       state.loggedIn = false
-      state.entities = state.entities.filter( user => user.id !== action.payload)
+      state.currentUser = null
     },
   },
 });
 
 // export the action creators
-export const { userLoggedIn, userLogout, userFetchRejected } = userSlice.actions;
+export const { userLoggedIn, userLogout, userFetchRejected, usersFetched } = userSlice.actions;
 
 export default userSlice.reducer;
