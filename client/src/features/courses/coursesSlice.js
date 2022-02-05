@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { formatCourse, formatDate } from "../../Globals";
 
 
 
@@ -19,7 +20,17 @@ const coursesSlice = createSlice({
       state.entities = action.payload;
     },
     courseAdded(state, action) {
-      state.entities.push({name: action.payload.name})
+      
+      state.entities.push({
+        name: action.payload.name,
+        id: action.payload.id,
+        setting: action.payload.setting,
+        meeting_day: action.payload.meeting_day,
+        start_date: action.payload.start_date,
+        start_time: new Date(action.payload.start_time).toString(),
+        status: action.payload.status,
+        user_id: action.payload.user_id
+      })
     },
     courseRemoved(state, action) {
       state.entities = state.entities.filter(course => course.id !== action.payload)
@@ -27,7 +38,14 @@ const coursesSlice = createSlice({
     courseUpdated(state, action) { 
       const course = state.entities.find((course) => course.id === action.payload.id)
       if (course) {
-        course.name = action.payload.name
+          course.name = action.payload.name
+          course.id = action.payload.id
+          course.meeting_day = action.payload.meeting_day
+          course.setting = action.payload.setting
+          course.start_date = action.payload.start_date
+          course.start_time = new Date(action.payload.start_time).toString()
+          course.status = action.payload.status
+          course.user_id = action.payload.user_id
       }
     }
   }
