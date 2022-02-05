@@ -34,6 +34,14 @@ export const customStyles = <style type="text/css">
 `}
 </style>
 
+export const formatDate = (dateString) => {
+  
+  const year = parseInt(dateString.slice(0, 4), 10)
+  const month = parseInt(dateString.slice(5, 7), 10) - 1
+  const day = parseInt(dateString.slice(-2), 10)
+  return new Date(year, month, day)
+}
+
 export const formatCourse = (courseObj) => {
   const formattedCourse = {...courseObj}
   switch (courseObj.meeting_day) {
@@ -94,6 +102,7 @@ export const formatCourse = (courseObj) => {
     default:
       formattedCourse.setting = "";
   }
-  debugger
+  
+  formattedCourse.start_time = new Date(courseObj.start_time)
   return formattedCourse
 }
