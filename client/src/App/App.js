@@ -10,16 +10,14 @@ import Home from './Home';
 import { verifyLoggedIn, userLogout } from "../features/user/userSlice";
 import CoursesContainer from '../features/courses/CoursesContainer';
 
-
-
 function App() {
 
   const loggedIn = useSelector(state => state.user.loggedIn)
-  const user = useSelector(state => state.user.entities[0])
+  const currentUser = useSelector(state => state.user.currentUser)
   const dispatch = useDispatch()
 
   const logOut = () => {
-    dispatch(userLogout(user.id));
+    dispatch(userLogout(currentUser.id));
     localStorage.removeItem('jwt');
   }
 
@@ -30,6 +28,16 @@ function App() {
     }
   },[loggedIn, dispatch])
 
+  const setHomeRoute = () => {
+    if (loggedIn && currentUser) {
+    return <Profile
+             loggedIn={loggedIn} 
+            />
+    }else{
+      return <Home />
+    }
+  }
+
   return (
     <>
       <NavBar loggedIn={loggedIn} logOut={logOut} />
@@ -37,9 +45,7 @@ function App() {
         <Routes>
           <Route 
             path='/' 
-            element={ loggedIn && user ? <Profile
-             loggedIn={loggedIn} 
-            /> : <Home />}
+            element={setHomeRoute()}
           />
           <Route 
             path='/signup' 
