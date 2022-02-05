@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import StudentsContainer from "../students/StudentsContainer";
 
 const Profile = () => {
-  const user = useSelector(state => state.user.entities[0])
+  const user = useSelector(state => state.user.currentUser)
 
   return (
     <Container>
