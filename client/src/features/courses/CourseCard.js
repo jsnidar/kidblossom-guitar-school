@@ -10,7 +10,7 @@ import { baseUrl, headers, getToken } from "../../Globals";
 const CourseCard = ({ course }) => {
 
   const [ editCourse, setEditCourse ] = useState(false)
-  const user = useSelector(state => state.user.entities[0])
+  const user = useSelector(state => state.user.currentUser)
   const dispatch = useDispatch()
 
   const handleRemoveCourse = () => {
