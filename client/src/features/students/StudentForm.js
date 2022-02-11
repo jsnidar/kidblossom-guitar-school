@@ -1,28 +1,57 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Form, Container, Row, Col } from 'react-bootstrap';
 import 'react-phone-number-input/style.css'
 import { customStyles } from '../../Globals';
 import { baseUrl, headers, getToken } from "../../Globals";
-
+import { useParams, useNavigate } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
-import { studentAdded, studentUpdated, studentFetchRejected, studentActionLoading } from './studentsSlice';
+import { studentAdded, studentUpdated, studentFetchRejected, studentActionLoading, studentFetched } from './studentsSlice';
 import { setErrors } from '../../errorHandling/errorsSlice';
-
 import ErrorAlert from '../../errorHandling/ErrorAlert';
 
 
-const StudentForm = ({ setShowStudentForm, studentToEdit }) => {
+const StudentForm = () => {
 
   const dispatch = useDispatch()
   const errors = useSelector(state => state.errors.entities)
-  const client_account = useSelector(state => state.user.currentUser.client_account.id)
-  
-  const [formData, setFormData ] = useState( studentToEdit ? {...studentToEdit, gender: "male" ? 1 : 0 } : {
+
+  const { studentId } = useParams()
+  const student = useSelector(state => state.students.currentStudent)
+  const clientId = useSelector(state => state.user.currentUser.client_account.id)
+  const role = useSelector(state => state.user.currentUser.role)
+  let navigate = useNavigate()
+
+  const [formData, setFormData ] = useState({
     first_name: '', 
     last_name: '',
     birth_date: '',
     gender: '',
   })
+
+  useEffect(()=> {
+    if (studentId){
+      fetch(baseUrl + `/students/${studentId}`, {
+        method: "GET",
+        headers: {
+          ...headers,
+          ...getToken()
+        },
+      })
+      .then(res => {
+        if(res.ok) {
+          res.json()
+          .then(student => {
+            dispatch(studentFetched(student))
+            setFormData({...student, gender: student.gender === "female" ? 0 : 1})
+          })
+        }else{
+          res.json().then(errors => {
+            dispatch(setErrors(errors))
+          })
+        }
+      })
+    }
+  },[studentId, dispatch])
   
   const handleChange = (e) => {
     setFormData({...formData, [e.target.id]: e.target.value})
@@ -34,8 +63,9 @@ const StudentForm = ({ setShowStudentForm, studentToEdit }) => {
       last_name: '',
       birth_date: '',
       gender: '',
+      client_account: ''
     })
-    setShowStudentForm(false)
+    studentId ? navigate(`/students/${studentId}`) : (role === 'client' ? navigate('/') : navigate('/students'))
   }
   const studentPost = (strongParams) => {
 
@@ -51,9 +81,9 @@ const StudentForm = ({ setShowStudentForm, studentToEdit }) => {
     .then(res => {
       if(res.ok) {
         res.json()
-        .then(data => {
-          dispatch(studentAdded(data.student))
-          setShowStudentForm(false);
+        .then(student => {
+          dispatch(studentAdded(student))
+          navigate(`/students/${student.id}`)
         })
       }else{
         res.json().then(errors => {
@@ -67,7 +97,7 @@ const StudentForm = ({ setShowStudentForm, studentToEdit }) => {
   const studentPatch = (strongParams) => {
 
     dispatch(studentActionLoading());
-    fetch(baseUrl + `/students/${studentToEdit.id}`, {
+    fetch(baseUrl + `/students/${student.id}`, {
       method: "PATCH",
       headers: {
         ...headers,
@@ -78,9 +108,9 @@ const StudentForm = ({ setShowStudentForm, studentToEdit }) => {
     .then(res => {
       if(res.ok) {
         res.json()
-        .then(data => {
-          dispatch(studentUpdated(data.student))
-          setShowStudentForm(false);
+        .then(student => {
+          dispatch(studentUpdated(student))
+          navigate(`/students/${studentId}`)
         })
       }else{
         res.json().then(errors => {
@@ -94,17 +124,18 @@ const StudentForm = ({ setShowStudentForm, studentToEdit }) => {
   const handleSubmit = (e) => {
     e.preventDefault()
 
+    debugger
     const strongParams = {
       student: {
         first_name: formData.first_name,
         last_name: formData.last_name,
         birth_date: formData.birth_date,
         gender: parseInt(formData.gender, 10),
-        client_account_id: client_account  
+        client_account_id: clientId
       },
     }
 
-    studentToEdit ? studentPatch(strongParams) : studentPost(strongParams)
+    studentId ? studentPatch(strongParams) : studentPost(strongParams)
   }
 
   return (
@@ -114,7 +145,7 @@ const StudentForm = ({ setShowStudentForm, studentToEdit }) => {
         <br></br>
         <Form>
           <Row>
-            { studentToEdit ? <h2>Edit Student</h2> : <h2>Add Student</h2> }
+            { studentId ? <h2>Edit Student</h2> : <h2>Add Student</h2> }
             { errors.length > 0 ? <ErrorAlert errors={errors} /> : null }
           </Row>
           <Row>
@@ -168,7 +199,7 @@ const StudentForm = ({ setShowStudentForm, studentToEdit }) => {
               <Button 
                 variant="yellow" 
                 type="submit"
-                onClick={e => handleSubmit(e)}
+                onClick={e => handleSubmit(e, clientId)}
               >
                 Submit
               </Button>
