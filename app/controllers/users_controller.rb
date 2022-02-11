@@ -8,24 +8,24 @@ class UsersController < ApplicationController
     else 
       render json: { errors: ['Unauthorized']}, status: :unauthorized
     end
+  end
   
   def create
     @user = User.new(user_params)
     @user.role = 0
 
     if @user.save
-      # Should I create the associated account here or should that happen through the client_account controller? 
       @user.create_client_account(client_params)
       @token = encode_token({ user_id: @user.id })
-      render json: { user: @user, token: @token }, status: :created
-
+      render json: { user: UserSerializer.new(@user), token: @token }, status: :created
     else
       render json: @user.errors.full_messages, status: :unprocessable_entity
     end
   end
 
   def show
-    render json: @user
+    @token = encode_token({ user_id: @user.id })
+    render json: { user: UserSerializer.new(@user), token: @token }
   end
 
   def destroy
