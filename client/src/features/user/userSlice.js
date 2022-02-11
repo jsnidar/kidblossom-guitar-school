@@ -3,6 +3,7 @@ import { baseUrl, headers, getToken } from "../../Globals";
 import { setErrors } from "../../errorHandling/errorsSlice";
 import { studentsFetched } from "../students/studentsSlice";
 import { coursesFetched } from "../courses/coursesSlice";
+import { instructorsFetched } from "../instructors/instructorsSlice";
 
 export function logInFetch(strongParams) {
   return function (dispatch) {
@@ -21,9 +22,13 @@ export function logInFetch(strongParams) {
         res.json()
         .then(data => {
           localStorage.setItem('jwt', data.token)
-          dispatch(userLoggedIn(data.user));
+          dispatch(userLogInFetch(data.user))
+          dispatch(userLoggedIn(true));
           if (data.users) {
-            usersFetched(data.users)
+            dispatch(usersFetched(data.users))
+          }
+          if (data.instructors) {
+            dispatch(instructorsFetched(data.instructors))
           }
           dispatch(studentsFetched(data.students))
           dispatch(setErrors([]))
@@ -51,15 +56,18 @@ export function verifyLoggedIn() {
       if(res.ok) {
         res.json()
         .then(data => {
-          dispatch(userLoggedIn(data.user));
+          dispatch(userLogInFetch(data.user))
+          dispatch(userLoggedIn(true));
           if (data.users) {
-            usersFetched(data.users)
+            dispatch(usersFetched(data.users))
+          }
+          if (data.instructors) {
+            dispatch(instructorsFetched(data.instructors))
           }
           dispatch(studentsFetched(data.students))
           dispatch(coursesFetched(data.courses))
           dispatch(setErrors([]))
         })
-        debugger
       }else{
         res.json().then(errors => {
           dispatch(userFetchRejected())
@@ -88,7 +96,7 @@ const userSlice = createSlice({
     usersFetched(state, action) {
       state.entities = action.payload;
     },
-    userLoggedIn(state, action) {
+    userLogInFetch(state, action) {
       state.currentUser = {
         id: action.payload.id,
         first_name: action.payload.first_name,
@@ -102,17 +110,17 @@ const userSlice = createSlice({
         client_account: action.payload.client_account,
         role: action.payload.role
       };
-      state.status = "idle"
-      state.loggedIn = true
+    },
+    userLoggedIn(state, action) {
+      state.loggedIn = action.payload
     },
     userLogout(state, action) {
-      state.loggedIn = false
-      state.currentUser = null
+      state.currentUser = action.payload
     },
   },
 });
 
 // export the action creators
-export const { userLoggedIn, userLogout, userFetchRejected, usersFetched } = userSlice.actions;
+export const { userLoggedIn, userLogout, userFetchRejected, usersFetched, userLogInFetch } = userSlice.actions;
 
 export default userSlice.reducer;
