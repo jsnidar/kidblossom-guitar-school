@@ -28,7 +28,6 @@ const LogIn = () => {
     setFormData({...formData, [e.target.id]: e.target.value})
   }
 
-
   const handleLogInSubmit = e => {
     e.preventDefault();
     const strongParams = {
@@ -37,8 +36,6 @@ const LogIn = () => {
     dispatch(logInFetch(strongParams))
   }
   
-    
-
   return (
 
     <Container>
