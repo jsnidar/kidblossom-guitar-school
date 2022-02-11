@@ -1,16 +1,22 @@
-import { useState } from "react"
-import { Row, Button } from "react-bootstrap"
+import { Container, Row, Button } from "react-bootstrap"
 import { customStyles } from "../../Globals"
-import StudentForm from "./StudentForm"
+import { useEffect } from "react"
 import StudentCard from "./StudentCard"
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchStudents } from "./studentsSlice"
+import { useNavigate } from "react-router-dom"
 
 
 const StudentsContainer = () => {
 
-  const [showStudentForm, setShowStudentForm] = useState(false)
   const students = useSelector(state => state.students.entities)
+  const dispatch = useDispatch()
+  let navigate = useNavigate()
   
+  useEffect(()=> {
+    dispatch(fetchStudents())
+  },[dispatch])
+
   const renderStudents = students.length > 0 ? students.map(student => <StudentCard 
       key={student.id}
       student={student} 
@@ -18,20 +24,20 @@ const StudentsContainer = () => {
   ) : null
 
   return (
-    <Row className='pt-2'>
-    {customStyles}
-    <h2>Students</h2>
-    {renderStudents}
-    {showStudentForm ? <StudentForm 
-        setShowStudentForm={setShowStudentForm} 
-      /> : <Button 
-        variant='yellow' 
-        onClick={() => setShowStudentForm(true)}
-      >
-        Add a Student
-      </Button>
-    }
-    </Row>
+    <Container>
+      <Row className='pt-2'>
+        {customStyles}
+        <h2>Students</h2>
+        {renderStudents}
+        <Button 
+            variant='yellow' 
+            onClick={() => navigate(`/students/new`)}
+          >
+            Add a Student
+          </Button>
+        </Row>
+    </Container>
+    
   )
 }
 
