@@ -1,11 +1,37 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { baseUrl, getToken, headers } from "../../Globals";
+import { setErrors } from "../../errorHandling/errorsSlice";
 
-
+export function fetchStudents() {
+  return function (dispatch) {
+    
+    fetch(baseUrl + '/students', {
+      method: "GET",
+      headers: {
+        ...headers,
+        ...getToken()
+      },
+    })
+    .then(res => {
+      if(res.ok) {
+        res.json()
+        .then(students => {
+          dispatch(studentsFetched(students))
+        })
+      }else{
+        res.json().then(errors => {
+          dispatch(setErrors(errors))
+        })
+      }
+    })
+  }
+}
 
 const studentsSlice = createSlice({
   name: 'students',
   initialState: {
     entities: [],
+    currentStudent: {},
     status: 'idle',
   },
   reducers: {
@@ -17,6 +43,9 @@ const studentsSlice = createSlice({
     },
     studentsFetched(state, action) {
       action.payload ? state.entities  = action.payload : state.entities = [];
+    },
+    studentFetched(state, action) {
+      state.currentStudent = action.payload;
     },
     studentAdded(state, action) {
       state.entities.push(action.payload)
@@ -36,6 +65,6 @@ const studentsSlice = createSlice({
   }
 })
 // export the action creators
-export const { studentAdded, studentRemoved, studentUpdated, studentFetchRejected, studentsFetched, studentActionLoading } = studentsSlice.actions;
+export const { studentAdded, studentRemoved, studentUpdated, studentFetchRejected, studentsFetched, studentFetched, studentActionLoading } = studentsSlice.actions;
 
 export default studentsSlice.reducer;
