@@ -1,43 +1,38 @@
 import { Row, Container, Button } from "react-bootstrap"
 import { customStyles } from "../../Globals"
-import CourseForm from "./CourseForm"
-import CourseCard from "./CourseCard"
-import { useSelector } from "react-redux";
-import { useState, useEffect } from "react";
+import CoursesList from "./CoursesList";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-
+import { fetchCourses } from "./coursesSlice";
 
 
 const CoursesContainer = () => {
 
-  let navigate = useNavigate()
-  const [showCourseForm, setShowCourseForm] = useState(false)
   const courses = useSelector(state => state.courses.entities)
-  const loggedIn = useSelector(state => state.user.loggedIn)
+  let navigate = useNavigate()
+  const dispatch = useDispatch()
 
-  const renderCourses = courses.length > 0 ? courses.map(course => <CourseCard 
-      key={course.id}
-      course={course} 
-    />
-  ) : null
-
+  useEffect(()=> {
+    dispatch(fetchCourses())
+  },[dispatch])
 
   return (
     <Container>
+      {courses && courses.length > 0 ?
       <Row className='pt-2'>
       {customStyles}
       <h2>Classes</h2>
-      {renderCourses}
-      {showCourseForm ? <CourseForm 
-          setShowCourseForm={setShowCourseForm} 
-        /> : <Button 
+      <Row>
+      <Button 
           variant='yellow' 
-          onClick={() => setShowCourseForm(true)}
+          onClick={() => navigate('/classes/new')}
         >
           Add a Class
         </Button>
-      }
       </Row>
+        <CoursesList />
+      </Row> : null }
     </Container>
   )
 }
