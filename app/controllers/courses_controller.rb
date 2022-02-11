@@ -2,37 +2,66 @@ class CoursesController < ApplicationController
 
   before_action :set_course, only: [:show, :update, :destroy]
 
-  def index
-    courses = Course.all
+  def create
+    if current_user.role == 'admin' || current_user.role == 'instructor'
+      course = current_user.courses.new(course_params)
+      if course.save  
+        render json: course, status: :created
+      else
+        render json: course.errors.full_messages, status: :unprocessable_entity
+      end
+    else
+      render json: { errors: ['Method not allowed']}, status: :method_not_allowed
+    end
   end
 
-  def create
-    @course = @user.courses.new(course_params)
-    if @course.save  
-      @token = encode_token({ user_id: @user.id })
-      render json: { course: @course, token: @token }, status: :created
+  def index
+    if current_user.role === 'admin'
+      courses = Course.all
+      render json: courses
+    elsif current_user.role === 'instructor'
+      courses = current_user.courses
+      render json: courses 
     else
-      render json: @course.errors.full_messages, status: :unprocessable_entity
+      render json: { errors: ['Method not allowed']}, status: :method_not_allowed
+    end
+  end
+
+  def show
+    if @course && (current_user.role == "admin" || current_user.courses.includes?(params[:id]))
+        # logic for showing a course for a client account || current_user.students_courses.includes?(params[:id])
+      render json: @course
+    else
+      render json: @course.errors.full_messages, status: :not_foundj
     end
   end
 
   def update
-    if @course.update(course_params)
-      render json: { course: @course, token: @token }
+    if current_user.role == 'admin'
+      if @course.update(course_params)
+        render json: @course
+      else
+        render json: @course.errors.full_messages, status: :unprocessable_entity
+      end
+    elsif current_user.role == 'instructor' && current_user.courses.exists?(params[:id])
+      if @course.update(course_params)
+        render json: @course
+      else
+        render json: @course.errors.full_messages, status: :unprocessable_entity
+      end
     else
-      render json: @course.errors.full_messages, status: :unprocessable_entity
+      render json: { errors: ['Method not allowed']}, status: :method_not_allowed
     end
   end
 
-
   def destroy
-    @course.destroy
+    course.destroy
   end
 
   private
 
   def set_course
-    @course = Course.find(params[:id])
+    @course = Course.find_by(id: params[:id])
   end
 
   def course_params
