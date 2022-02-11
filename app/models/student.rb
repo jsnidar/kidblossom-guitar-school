@@ -8,4 +8,12 @@ class Student < ApplicationRecord
   has_many :student_courses
   has_many :courses, through: :student_courses
   has_many :instructors, through: :student_courses, source: :user
+
+  def formatted_birthdate
+    self.birth_date.strftime("%B %e, %Y")
+  end
+
+  def full_name
+    "#{self.first_name.capitalize} #{self.last_name.capitalize}"
+  end
 end
