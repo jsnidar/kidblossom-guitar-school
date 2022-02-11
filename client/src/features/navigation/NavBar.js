@@ -2,12 +2,12 @@ import React from 'react';
 import { Container, Navbar, Nav, Button } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 import { customStyles } from '../../Globals';
-import { userLoggedIn } from '../user/userSlice';
 
-const NavBar = ({ logOut, loggedIn }) => {
+const NavBar = ({ logOut }) => {
 
   const user = useSelector(state => state.user.currentUser)
-    
+  const loggedIn = useSelector(state => state.user.loggedIn)
+
   const loggedOutLinks = <>
     <Nav.Link href="/">Home</Nav.Link>
     <Nav.Link href="/signup">Sign Up</Nav.Link>
@@ -16,7 +16,9 @@ const NavBar = ({ logOut, loggedIn }) => {
 
   const loggedInLinks = <>
     <Nav.Link href="/">Home</Nav.Link>
-    { user.role === 1 || user.role === 2 ? <Nav.Link href="/courses">Classes</Nav.Link> : null}
+    <Nav.Link href="/classes">Classes</Nav.Link>
+    <Nav.Link href="/instructors">Instructors</Nav.Link>
+    <Nav.Link href='/students'>Students</Nav.Link>
     <Button variant="yellow-outline" onClick={logOut}>
       Logout
     </Button>
