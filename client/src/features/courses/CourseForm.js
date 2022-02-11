@@ -1,18 +1,48 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Form, Container, Row, Col } from 'react-bootstrap';
 import { customStyles, formatCourse } from '../../Globals';
 import { baseUrl, headers, getToken } from "../../Globals";
-
 import { useDispatch, useSelector } from 'react-redux';
 import { courseAdded, courseUpdated, courseFetchRejected, courseActionLoading } from './coursesSlice';
 import { setErrors } from '../../errorHandling/errorsSlice';
 import ErrorAlert from '../../errorHandling/ErrorAlert';
 import Datetime from "react-datetime"
+import { useNavigate, useParams } from 'react-router-dom';
 
-const CourseForm = ({ setShowCourseForm, courseToEdit }) => {
+const CourseForm = () => {
 
-  
-  const [formData, setFormData ] = useState( courseToEdit ? formatCourse(courseToEdit) : {
+  const errors = useSelector(state => state.errors.entities)
+  const dispatch = useDispatch()
+  let navigate = useNavigate()
+
+  const { classId } = useParams()
+  const course = useSelector(state => state.courses.currentCourse)
+
+  useEffect(()=> {
+    if (classId){
+      fetch(baseUrl + `/courses/${classId}`, {
+        method: "GET",
+        headers: {
+          ...headers,
+          ...getToken()
+        },
+      })
+      .then(res => {
+        if(res.ok) {
+          res.json()
+          .then(course => {
+            setFormData(formatCourse(course))
+          })
+        }else{
+          res.json().then(errors => {
+            dispatch(setErrors(errors))
+          })
+        }
+      })
+    }
+  },[classId, dispatch])
+
+  const [formData, setFormData ] = useState({
     name: "",
     meeting_day: "",
     status: '',
@@ -21,8 +51,17 @@ const CourseForm = ({ setShowCourseForm, courseToEdit }) => {
     start_time: ''
   })
   
-  const errors = useSelector(state => state.errors.entities)
-  const dispatch = useDispatch()
+  const handleCancel = () => {
+    setFormData({
+      name: "",
+      meeting_day: "",
+      status: '',
+      setting: '',
+      start_date: '',
+      start_time: ''
+    })
+    classId ? navigate(`/classes/${classId}`) : navigate('/classes')
+  }
 
   const handleChange = (e) => {
     e.target ? 
@@ -44,10 +83,10 @@ const CourseForm = ({ setShowCourseForm, courseToEdit }) => {
     .then(res => {
       if(res.ok) {
         res.json()
-        .then(data => {
-          dispatch(courseAdded(data.course))
-          setShowCourseForm(false)
+        .then(course => {
+          dispatch(courseAdded(course))
           dispatch(setErrors([]));
+          navigate(`/classes/${course.id}`)
         })
       }else{
         res.json().then(errors => {
@@ -61,7 +100,7 @@ const CourseForm = ({ setShowCourseForm, courseToEdit }) => {
   const coursePatch = (strongParams) => {
 
     dispatch(courseActionLoading());
-    fetch(baseUrl + `/courses/${courseToEdit.id}`, {
+    fetch(baseUrl + `/courses/${classId}`, {
       method: "PATCH",
       headers: {
         ...headers,
@@ -72,10 +111,10 @@ const CourseForm = ({ setShowCourseForm, courseToEdit }) => {
     .then(res => {
       if(res.ok) {
         res.json()
-        .then(data => {
-          dispatch(courseUpdated(data.course))
-          setShowCourseForm(false);
+        .then(course => {
+          dispatch(courseUpdated(course))
           dispatch(setErrors([]))
+          navigate(`/classes/${classId}`)
         })
       }else{
         res.json().then(errors => {
@@ -86,21 +125,11 @@ const CourseForm = ({ setShowCourseForm, courseToEdit }) => {
     })
   }
 
-  const handleCancel = () => {
-    setFormData({
-      name: "",
-      meeting_day: "",
-      status: '',
-      setting: '',
-      start_date: '',
-      start_time: ''
-    })
-    setShowCourseForm(false)
-  }
+  
 
   const handleSubmit = (e) => {
     e.preventDefault()
-
+    
     const strongParams = {
       course: {
         name: parseInt(formData.name),
@@ -108,11 +137,11 @@ const CourseForm = ({ setShowCourseForm, courseToEdit }) => {
         status: parseInt(formData.status),
         setting: parseInt(formData.setting),
         start_date: formData.start_date,
-        start_time: formData.start_time
+        start_time: formData.start_time,
       },
     }
 
-    courseToEdit ? coursePatch(strongParams) : coursePost(strongParams)
+    classId ? coursePatch(strongParams) : coursePost(strongParams)
   }
 
   return (
@@ -122,7 +151,7 @@ const CourseForm = ({ setShowCourseForm, courseToEdit }) => {
         <br></br>
         <Form>
           <Row>
-            { courseToEdit ? <h2>Edit Class</h2> : <h2>Add Class</h2> }
+            { course ? <h2>Edit Class</h2> : <h2>Add Class</h2> }
             { errors.length > 0 ? <ErrorAlert errors={errors} /> : null }
           </Row>
           <Row>
@@ -142,13 +171,14 @@ const CourseForm = ({ setShowCourseForm, courseToEdit }) => {
                 <Form.Label>Day of the Week</Form.Label>
                 <Form.Select value={formData.meeting_day} onChange={handleChange}>
                   <option>Select Day</option>
-                  <option value="0">Monday</option>
-                  <option value="1">Tuesday</option>
-                  <option value="2">Wednesday</option>
-                  <option value="3">Thursday</option>
-                  <option value="4">Friday</option>
-                  <option value="5">Saturday</option>
-                  <option value="6">Sunday</option>
+                  <option value="0">Sunday</option>
+                  <option value="1">Monday</option>
+                  <option value="2">Tuesday</option>
+                  <option value="3">Wednesday</option>
+                  <option value="4">Thursday</option>
+                  <option value="5">Friday</option>
+                  <option value="6">Saturday</option>
+                  
                 </Form.Select>
               </Form.Group>
             </Col>
