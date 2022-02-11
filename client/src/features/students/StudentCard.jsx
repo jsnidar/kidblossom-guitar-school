@@ -1,17 +1,16 @@
 
-import { Container, Col, Row, Button } from "react-bootstrap"
-import StudentForm from "./StudentForm"
-import { useState } from "react"
+import { Container, Row, Button } from "react-bootstrap"
 import { customStyles } from "../../Globals"
 import { useDispatch } from "react-redux"
 import { studentRemoved, studentActionLoading } from "./studentsSlice"
-import { baseUrl, headers, getToken, formatDate } from "../../Globals";
+import { baseUrl, headers, getToken, capitalizeWord } from "../../Globals";
+import { useNavigate } from "react-router-dom"
 
 
 const StudentCard = ({ student }) => {
 
-  const [ editStudent, setEditStudent ] = useState(false)
   const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   const handleRemoveStudent = () => {
 
@@ -22,46 +21,29 @@ const StudentCard = ({ student }) => {
         ...headers,
         ...getToken()
       },
-      body: JSON.stringify(student.id)
     })
     .then(dispatch(studentRemoved(student.id)))
   }
 
-  
-  const displayStudentInfo = <Container>
-    {customStyles}
-    <Row className='border p-1 m-1'>
-      <h3 className='border-bottom'>{student.first_name} {student.last_name}</h3>
-      <Col>
-        Gender: {student.gender}
-        <br></br>
-        Birthdate: {formatDate(student.birth_date).toDateString()}
-      </Col>
-      <Col>
-        
-      </Col>
-      <Row className="justify-content-evenly">
-        <Button 
-          variant='yellow' 
-          onClick={() => setEditStudent(true)}
-        >Edit Student Info</Button>
-        <Button 
-        variant='yellow' 
-        onClick={() => handleRemoveStudent(student.id)} 
-      >Remove Student</Button>
-      </Row> 
-    </Row>
-    
-  </Container>
-
   return (
-    <> 
-      {editStudent ? <StudentForm 
-          setShowStudentForm={setEditStudent} 
-          studentToEdit={student} 
-        /> : displayStudentInfo
-      } 
-    </>
+    <Container>
+      {customStyles}
+      <Row className='border p-1 m-1'>
+        <h3 className='border-bottom'>{student.full_name}</h3>
+          <p>Gender: {capitalizeWord(student.gender)}</p>
+          <p>Birthdate: {student.formatted_birthdate}</p>
+        <Row className="justify-content-evenly">
+          <Button 
+            variant='yellow' 
+            onClick={() => navigate(`/students/${student.id}/edit`)}
+          >Edit Student Info</Button>
+          <Button 
+          variant='yellow' 
+          onClick={() => handleRemoveStudent(student.id)} 
+        >Remove Student</Button>
+        </Row> 
+      </Row>
+  </Container>
   )
 }
 
