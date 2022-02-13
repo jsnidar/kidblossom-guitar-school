@@ -16,7 +16,7 @@ const CourseForm = () => {
   let navigate = useNavigate()
 
   const { classId } = useParams()
-  const course = useSelector(state => state.courses.currentCourse)
+  const course = useSelector(state => state.courses.entities.find(course => course.id === parseInt(classId, 10)))
 
   useEffect(()=> {
     if (classId){
@@ -31,6 +31,7 @@ const CourseForm = () => {
         if(res.ok) {
           res.json()
           .then(course => {
+            dispatch(courseAdded(course))
             setFormData(formatCourse(course))
           })
         }else{
@@ -48,9 +49,12 @@ const CourseForm = () => {
     status: '',
     setting: '',
     start_date: '',
-    start_time: ''
+    start_time: '',
+    level: ''
   })
   
+  console.log(formData)
+
   const handleCancel = () => {
     setFormData({
       name: "",
@@ -58,7 +62,8 @@ const CourseForm = () => {
       status: '',
       setting: '',
       start_date: '',
-      start_time: ''
+      start_time: '',
+      level: ''
     })
     classId ? navigate(`/classes/${classId}`) : navigate('/classes')
   }
@@ -125,8 +130,6 @@ const CourseForm = () => {
     })
   }
 
-  
-
   const handleSubmit = (e) => {
     e.preventDefault()
     
@@ -138,6 +141,7 @@ const CourseForm = () => {
         setting: parseInt(formData.setting),
         start_date: formData.start_date,
         start_time: formData.start_time,
+        level: parseInt(formData.level)
       },
     }
 
@@ -167,6 +171,18 @@ const CourseForm = () => {
               </Form.Group>
             </Col>
             <Col>
+              <Form.Group className="mb-3" controlId="level">
+                <Form.Label>Level</Form.Label>
+                <Form.Select value={formData.level} onChange={handleChange}>
+                  <option>Select Level</option>
+                  <option value="0">Step One</option>
+                  <option value="1">Reading Book</option>
+                  <option value="2">Tunes 1</option>
+                  <option value="3">Tunes 2</option>
+                </Form.Select>
+              </Form.Group>
+            </Col>
+            <Col>
               <Form.Group className="mb-3" controlId="meeting_day">
                 <Form.Label>Day of the Week</Form.Label>
                 <Form.Select value={formData.meeting_day} onChange={handleChange}>
@@ -178,7 +194,6 @@ const CourseForm = () => {
                   <option value="4">Thursday</option>
                   <option value="5">Friday</option>
                   <option value="6">Saturday</option>
-                  
                 </Form.Select>
               </Form.Group>
             </Col>
