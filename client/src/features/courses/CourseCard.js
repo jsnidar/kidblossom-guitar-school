@@ -2,7 +2,7 @@ import { Container, Col, Row, Button } from "react-bootstrap"
 import { useEffect } from "react"
 import { customStyles, formatDate } from "../../Globals"
 import { useDispatch, useSelector } from "react-redux"
-import { courseRemoved, courseActionLoading, courseFetched, courseAdded } from "./coursesSlice"
+import { courseRemoved, courseActionLoading, courseAdded } from "./coursesSlice"
 import { setErrors } from "../../errorHandling/errorsSlice"
 import { baseUrl, headers, getToken, capitalizeWord } from "../../Globals"
 import { useNavigate, useParams } from "react-router-dom"
@@ -12,7 +12,7 @@ const CourseCard = () => {
 
   const { classId } = useParams()
 
-  const course = useSelector(state => state.courses.currentCourse)
+  const course = useSelector(state => state.courses.entities.find(course => course.id === parseInt(classId, 10)))
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
@@ -28,7 +28,6 @@ const CourseCard = () => {
       if(res.ok) {
         res.json()
         .then(courseInfo => {
-          dispatch(courseFetched(courseInfo))
           dispatch(courseAdded(courseInfo))
         })
       }else{
@@ -55,10 +54,11 @@ const CourseCard = () => {
   let timeString
   let formattedTimeString
   
-  if(course.id) {
+  if(course) {
     timeString = new Date(course.start_time).toLocaleTimeString()
     formattedTimeString = timeString.length === 11 ? timeString.slice(0, 5) + timeString.slice(8) : timeString.slice(0, 4) + timeString.slice(7)
   }
+  
   const formatCourseName = (string) => {
     let name = string.split("_").map(word => word.charAt(0).toUpperCase() + word.slice(1))
     name[name.length - 1] = "Minutes"
@@ -68,7 +68,7 @@ const CourseCard = () => {
   return (
     <Container>
       {customStyles}
-      {course.id ? <Row className='border p-1 m-1'>
+      {course ? <Row className='border p-1 m-1'>
         <h3 className='border-bottom'>{formatCourseName(course.name)}</h3>
         <Col>
           <p>
@@ -86,7 +86,7 @@ const CourseCard = () => {
             Instructor: {course.instructor_name}
           </p>
           <p>
-            Level: {capitalizeWord(course.course_level)}
+            Level: {course.level}
           </p>
           <p>
             Class Setting: {capitalizeWord(course.setting)}
