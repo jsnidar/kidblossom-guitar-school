@@ -73,6 +73,7 @@ class CoursesController < ApplicationController
         :status,
         :setting,
         :id,
+        :level,
         :user_id
       )
   end
