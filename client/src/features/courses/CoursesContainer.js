@@ -19,19 +19,22 @@ const CoursesContainer = () => {
 
   return (
     <Container>
-      {courses && courses.length > 0 ?
-      <Row className='pt-2'>
-      {customStyles}
-      <h2>Classes</h2>
       <Row>
-      <Button 
+        <h2>Classes</h2>
+      </Row>
+      <Row>
+        <Button 
           variant='yellow' 
           onClick={() => navigate('/classes/new')}
         >
           Add a Class
         </Button>
       </Row>
-        <CoursesList />
+      {courses && courses.length > 0 ?
+      <Row className='pt-2'>
+      {customStyles}
+      
+      <CoursesList />
       </Row> : null }
     </Container>
   )
