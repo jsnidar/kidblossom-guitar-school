@@ -2,7 +2,7 @@ import { useEffect } from "react"
 import { Container, Row, Button } from "react-bootstrap"
 import { customStyles } from "../../Globals"
 import { useDispatch, useSelector } from "react-redux"
-import { instructorRemoved, instructorActionLoading, instructorFetched } from "./instructorsSlice"
+import { instructorRemoved, instructorActionLoading, instructorAdded } from "./instructorsSlice"
 import { setErrors } from "../../errorHandling/errorsSlice"
 import { baseUrl, headers, getToken } from "../../Globals";
 import { useNavigate, useParams } from "react-router-dom"
@@ -11,12 +11,11 @@ import { useNavigate, useParams } from "react-router-dom"
 const InstructorPage = () => {
 
   const dispatch = useDispatch()
-  const user = useSelector(state => state.user.currentUser)
+  const user = useSelector(state => state.user.entities[0])
   let navigate = useNavigate()
   const { instructorId } = useParams()
   
-  const instructor = useSelector(state => state.instructors.currentInstructor)
-
+  const instructor = useSelector(state => state.instructors.entities.find(instructor => instructor.id === parseInt(instructorId, 10)))
 
   useEffect(()=> {
     fetch(baseUrl + `/instructors/${instructorId}`, {
@@ -30,7 +29,7 @@ const InstructorPage = () => {
       if(res.ok) {
         res.json()
         .then(instructor => {
-          dispatch(instructorFetched(instructor))
+          dispatch(instructorAdded(instructor))
         })
       }else{
         res.json().then(errors => {
@@ -55,7 +54,7 @@ const InstructorPage = () => {
 
   return (
     <Container>
-      {instructor.id ? 
+      {instructor ? 
         <>
           {customStyles}
           <Row>
