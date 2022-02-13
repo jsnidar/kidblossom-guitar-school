@@ -21,11 +21,11 @@ import StudentsContainer from '../features/students/StudentsContainer';
 function App() {
 
   const loggedIn = useSelector(state => state.user.loggedIn)
-  const currentUser = useSelector(state => state.user.currentUser)
+  const currentUser = useSelector(state => state.user.entities[0])
   const dispatch = useDispatch()
 
   const logOut = () => {
-    dispatch(userLogout(null))
+    dispatch(userLogout([]))
     dispatch(userLoggedIn(false));
     localStorage.removeItem('jwt');
   }
@@ -47,21 +47,21 @@ function App() {
     }
   }
 
-  const setCoursesRoute = () => {
-    if (loggedIn && (currentUser.role === 'admin' || currentUser.role === "instructor")) {
-      return <CoursesContainer />     
-    }else{
-      return <Home />
-    }
-  }
+  // const setCoursesRoute = () => {
+  //   if (loggedIn && (currentUser.role === 'admin' || currentUser.role === "instructor")) {
+  //     return <CoursesContainer />     
+  //   }else{
+  //     return <Home />
+  //   }
+  // }
 
-  const setInstructorsRoute = () => {
-    if (loggedIn && currentUser.role === 'admin') {
-      return <InstructorsContainer />     
-    }else{
-      return <Home />
-    }
-  }
+  // const setInstructorsRoute = () => {
+  //   if (loggedIn && currentUser.role === 'admin') {
+  //     return <InstructorsContainer />     
+  //   }else{
+  //     return <Home />
+  //   }
+  // }
 
   return (
     <>
