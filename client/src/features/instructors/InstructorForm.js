@@ -9,7 +9,7 @@ import { customStyles } from '../../Globals';
 import { headers, baseUrl, getToken } from '../../Globals';
 import { useDispatch, useSelector } from 'react-redux';
 import { setErrors } from '../../errorHandling/errorsSlice';
-import { instructorAdded, instructorActionLoading, instructorFetchRejected, instructorUpdated, instructorFetched } from './instructorsSlice';
+import { instructorAdded, instructorActionLoading, instructorFetchRejected, instructorUpdated } from './instructorsSlice';
 
 const InstructorForm = () => {
 
@@ -17,8 +17,8 @@ const InstructorForm = () => {
   const dispatch = useDispatch()
 
   const { instructorId } = useParams()
-  const instructor = useSelector(state => state.instructors.currentInstructor)
   let navigate = useNavigate()
+  // const instructor = useSelector(state => state.instructors.entities.find(instructor => instructor.id === parseInt(instructorId, 10)))
 
   useEffect(()=> {
     if (instructorId){
@@ -33,7 +33,7 @@ const InstructorForm = () => {
         if(res.ok) {
           res.json()
           .then(instructor => {
-            dispatch(instructorFetched(instructor))
+            // dispatch(instructorAdded(instructor))
             setFormData({
               first_name: instructor.first_name,
               last_name: instructor.last_name,
@@ -72,7 +72,7 @@ const InstructorForm = () => {
   }
 
   const handleCancel = () => {
-    instructor ? setFormData({
+    instructorId ? setFormData({
       first_name: '', 
       last_name: '',
       primary_phone: '',
@@ -111,7 +111,7 @@ const InstructorForm = () => {
         res.json()
         .then(instructor => {
           instructorAdded(instructor)
-          navigate(`/instructors/${instructorId}`)
+          navigate(`/instructors/${instructor.id}`)
         })
       }else{
         res.json().then(e => dispatch(setErrors(e)))
@@ -135,7 +135,7 @@ const InstructorForm = () => {
         res.json()
         .then(instructor => {
           dispatch(instructorUpdated(instructor))
-          navigate(`/instructors/${instructorId}`)
+          navigate(`/instructors/${instructor.id}`)
         })
       }else{
         res.json().then(errors => {
@@ -148,7 +148,7 @@ const InstructorForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    const strongParams = instructor ? {
+    const strongParams = instructorId ? {
       instructor: {
         first_name: formData.first_name,
         last_name: formData.last_name,
@@ -173,7 +173,7 @@ const InstructorForm = () => {
           password_confirmation: formData.password_confirmation,
         }
       }
-    instructor ? instructorPatch(strongParams) : instructorPost(strongParams)
+    instructorId ? instructorPatch(strongParams) : instructorPost(strongParams)
   }
 
 
@@ -238,7 +238,7 @@ const InstructorForm = () => {
           </Row>
           <Row>
             <Col>
-              {<UsStateDropdown formData={formData} handleChange={handleChange} />}
+              <UsStateDropdown formData={formData} handleChange={handleChange} />
             </Col>
             <Col>
               <Form.Group className="mb-3" controlId="zip_code">
@@ -264,7 +264,7 @@ const InstructorForm = () => {
               </Form.Group>
             </Col>
           </Row>
-          {!instructor ?
+          {!instructorId ?
             <>
               <Row>
                 <Col>
