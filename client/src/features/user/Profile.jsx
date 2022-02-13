@@ -9,7 +9,7 @@ import { fetchStudents } from "../students/studentsSlice";
 
 const Profile = () => {
 
-  const user = useSelector(state => state.user.currentUser)
+  const user = useSelector(state => state.user.entities[0])
   const students = useSelector(state => state.students.entities)
   const dispatch = useDispatch()
   let navigate = useNavigate()
@@ -40,9 +40,9 @@ const Profile = () => {
       </Row>
       {/* <Row className='border p-1 m-1'>
         <h3 className='border-bottom'>Account Details</h3>
-        <p>Account Status: {currentUser.client_account.status}</p>
-        <p>{currentUser.client_account.receive_notifications ? "I am receiving email notifications": "I am not receiving email notifications"}</p>
-        <p>Current Balance: ${currentUser.client_account.balance}</p>
+        <p>Account Status: {user.client_account.status}</p>
+        <p>{user.client_account.receive_notifications ? "I am receiving email notifications": "I am not receiving email notifications"}</p>
+        <p>Current Balance: ${user.client_account.balance}</p>
       </Row>  */}
       <Row className='pt-2'>
         <h2>Students</h2>
