@@ -2,7 +2,7 @@ import { useEffect } from "react"
 import { Container, Row, Button } from "react-bootstrap"
 import { customStyles } from "../../Globals"
 import { useDispatch, useSelector } from "react-redux"
-import { studentRemoved, studentActionLoading, studentFetched } from "./studentsSlice"
+import { studentRemoved, studentActionLoading, studentAdded } from "./studentsSlice"
 import { setErrors } from "../../errorHandling/errorsSlice"
 import { baseUrl, headers, getToken, capitalizeWord } from "../../Globals";
 import { useNavigate, useParams } from "react-router-dom"
@@ -14,7 +14,7 @@ const StudentPage = () => {
   const navigate = useNavigate()
   const { studentId } = useParams()
 
-  const student = useSelector(state => state.students.currentStudent)
+  const student = useSelector(state => state.students.entities.find(student => student.id === parseInt(studentId, 10)))
 
 
   useEffect(()=> {
@@ -29,7 +29,7 @@ const StudentPage = () => {
       if(res.ok) {
         res.json()
         .then(student => {
-          dispatch(studentFetched(student))
+          dispatch(studentAdded(student))
         })
       }else{
         res.json().then(errors => {
