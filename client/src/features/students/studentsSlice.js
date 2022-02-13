@@ -31,7 +31,6 @@ const studentsSlice = createSlice({
   name: 'students',
   initialState: {
     entities: [],
-    currentStudent: {},
     status: 'idle',
   },
   reducers: {
@@ -44,11 +43,8 @@ const studentsSlice = createSlice({
     studentsFetched(state, action) {
       action.payload ? state.entities  = action.payload : state.entities = [];
     },
-    studentFetched(state, action) {
-      state.currentStudent = action.payload;
-    },
     studentAdded(state, action) {
-      state.entities.push(action.payload)
+      state.entities = [...state.entities, action.payload]
     },
     studentRemoved(state, action) {
       state.entities = state.entities.filter(student => student.id !== action.payload)
@@ -65,6 +61,6 @@ const studentsSlice = createSlice({
   }
 })
 // export the action creators
-export const { studentAdded, studentRemoved, studentUpdated, studentFetchRejected, studentsFetched, studentFetched, studentActionLoading } = studentsSlice.actions;
+export const { studentAdded, studentRemoved, studentUpdated, studentFetchRejected, studentsFetched, studentActionLoading } = studentsSlice.actions;
 
 export default studentsSlice.reducer;
