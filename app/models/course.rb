@@ -10,6 +10,7 @@ class Course < ApplicationRecord
   validates :meeting_day, numericality: { in: 0..6 }
   validates :status, numericality: { in: 0..1 }
   validates :setting, numericality: { in: 0..1 }
+  validates :level, numericality: { in: 0..3 }
   validates_date :start_date
   
   
