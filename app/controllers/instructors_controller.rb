@@ -6,7 +6,7 @@ class InstructorsController < ApplicationController
       @instructor.role = 1
 
       if @instructor.save
-        render json: InstructorSerializer.new(@instructor), status: :created
+        render json: @instructor, status: :created
 
       else
         render json: @instructor.errors.full_messages, status: :unprocessable_entity
@@ -18,7 +18,7 @@ class InstructorsController < ApplicationController
 
   def index
     if current_user.role == "admin"
-      render json: InstructorSerializer.new(User.where(role: "instructor"))
+      render json: User.where(role: "instructor")
     else
       render json: { errors: ['Method not allowed']}, status: :method_not_allowed
     end
@@ -28,7 +28,10 @@ class InstructorsController < ApplicationController
     @instructor = User.find_by(id: params[:id])
     if @instructor
       if current_user.role == "admin" || current_user == @instructor
-      render json: InstructorSerializer.new(@instructor)
+        render json: @instructor
+      else
+        render json: { errors: ['Method not allowed']}, status: :method_not_allowed
+      end
     else
       render json: @instructor.errors.full_messages, status: :not_foundj
     end
@@ -37,7 +40,7 @@ class InstructorsController < ApplicationController
   def update
     @instructor = User.find_by(id: params[:id])
     if @instructor.update(update_instructor_params)
-      render json: InstructorSerializer.new(@instructor)
+      render json: @instructor
     else
       render json: @instructor.errors.full_messages, status: :unprocessable_entity
     end
