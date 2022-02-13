@@ -4,7 +4,5 @@ class InstructorSerializer < ActiveModel::Serializer
   has_many :courses
   has_many :student_courses, through: :courses 
   
-  def full_name
-    "#{self.first_name.titleize} #{self.last_name.titleize}"
-  end
+  
 end
