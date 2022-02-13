@@ -104,6 +104,22 @@ export const formatCourse = (courseObj) => {
     default:
       formattedCourse.setting = "";
   }
+  switch(courseObj.course_level) {
+    case "Step One":
+      formattedCourse.level = "0";
+      break;
+    case "Reading Book":
+      formattedCourse.level = "1";
+      break;
+    case "Tunes 1":
+      formattedCourse.level = "2";
+      break;
+    case "Tunes 2":
+      formattedCourse.level = "3";
+      break;
+    default:
+      formattedCourse.level = "";
+  }
   
   formattedCourse.start_time = new Date(courseObj.start_time)
   return formattedCourse
