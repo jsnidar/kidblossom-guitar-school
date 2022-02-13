@@ -5,7 +5,7 @@ import { customStyles } from '../../Globals';
 import { baseUrl, headers, getToken } from "../../Globals";
 import { useParams, useNavigate } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
-import { studentAdded, studentUpdated, studentFetchRejected, studentActionLoading, studentFetched } from './studentsSlice';
+import { studentAdded, studentUpdated, studentFetchRejected, studentActionLoading } from './studentsSlice';
 import { setErrors } from '../../errorHandling/errorsSlice';
 import ErrorAlert from '../../errorHandling/ErrorAlert';
 
@@ -16,9 +16,8 @@ const StudentForm = () => {
   const errors = useSelector(state => state.errors.entities)
 
   const { studentId } = useParams()
-  const student = useSelector(state => state.students.currentStudent)
-  const clientId = useSelector(state => state.user.currentUser.client_account.id)
-  const role = useSelector(state => state.user.currentUser.role)
+  const student = useSelector(state => state.students.entities.find(student => student.id === parseInt(studentId, 10)))
+  const role = useSelector(state => state.user.entities[0].role)
   let navigate = useNavigate()
 
   const [formData, setFormData ] = useState({
@@ -27,7 +26,7 @@ const StudentForm = () => {
     birth_date: '',
     gender: '',
   })
-
+ 
   useEffect(()=> {
     if (studentId){
       fetch(baseUrl + `/students/${studentId}`, {
@@ -41,7 +40,7 @@ const StudentForm = () => {
         if(res.ok) {
           res.json()
           .then(student => {
-            dispatch(studentFetched(student))
+            dispatch(studentAdded(student))
             setFormData({...student, gender: student.gender === "female" ? 0 : 1})
           })
         }else{
@@ -131,7 +130,7 @@ const StudentForm = () => {
         last_name: formData.last_name,
         birth_date: formData.birth_date,
         gender: parseInt(formData.gender, 10),
-        client_account_id: clientId
+        client_account_id: student.client_account_id
       },
     }
 
@@ -199,7 +198,7 @@ const StudentForm = () => {
               <Button 
                 variant="yellow" 
                 type="submit"
-                onClick={e => handleSubmit(e, clientId)}
+                onClick={e => handleSubmit(e)}
               >
                 Submit
               </Button>
