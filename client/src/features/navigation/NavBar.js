@@ -5,7 +5,6 @@ import { customStyles } from '../../Globals';
 
 const NavBar = ({ logOut }) => {
 
-  const user = useSelector(state => state.user.currentUser)
   const loggedIn = useSelector(state => state.user.loggedIn)
 
   const loggedOutLinks = <>
