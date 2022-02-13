@@ -31,7 +31,6 @@ const coursesSlice = createSlice({
   name: 'courses',
   initialState: {
     entities: [],
-    currentCourse: {},
     status: 'idle',
   },
   reducers: {
@@ -44,11 +43,8 @@ const coursesSlice = createSlice({
     coursesFetched(state, action) {
       state.entities = action.payload;
     },
-    courseFetched(state, action) {
-      state.currentCourse = action.payload
-    },
     courseAdded(state, action) {
-      state.entities.push({
+      state.entities = [...state.entities, {
         name: action.payload.name,
         id: action.payload.id,
         setting: action.payload.setting,
@@ -57,8 +53,9 @@ const coursesSlice = createSlice({
         start_time: new Date(action.payload.start_time).toString(),
         status: action.payload.status,
         user_id: action.payload.user_id,
+        level: action.payload.course_level,
         instructor_name: `${action.payload.user.first_name} ${action.payload.user.last_name}`
-      })
+      }]
     },
     courseRemoved(state, action) {
       state.entities = state.entities.filter(course => course.id !== action.payload)
@@ -74,6 +71,7 @@ const coursesSlice = createSlice({
           course.start_time = new Date(action.payload.start_time).toString()
           course.status = action.payload.status
           course.user_id = action.payload.user_id
+          course.level = action.payload.level
       }
     state.currentCourse = action.payload
     }
