@@ -52,8 +52,6 @@ const CourseForm = () => {
     start_time: '',
     level: ''
   })
-  
-  console.log(formData)
 
   const handleCancel = () => {
     setFormData({
