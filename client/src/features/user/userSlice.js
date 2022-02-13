@@ -1,9 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { baseUrl, headers, getToken } from "../../Globals";
 import { setErrors } from "../../errorHandling/errorsSlice";
-import { studentsFetched } from "../students/studentsSlice";
-import { coursesFetched } from "../courses/coursesSlice";
-import { instructorsFetched } from "../instructors/instructorsSlice";
 
 export function logInFetch(strongParams) {
   return function (dispatch) {
@@ -24,13 +21,6 @@ export function logInFetch(strongParams) {
           localStorage.setItem('jwt', data.token)
           dispatch(userLogInFetch(data.user))
           dispatch(userLoggedIn(true));
-          if (data.users) {
-            dispatch(usersFetched(data.users))
-          }
-          if (data.instructors) {
-            dispatch(instructorsFetched(data.instructors))
-          }
-          dispatch(studentsFetched(data.students))
           dispatch(setErrors([]))
         })
       }else{
@@ -58,14 +48,6 @@ export function verifyLoggedIn() {
         .then(data => {
           dispatch(userLogInFetch(data.user))
           dispatch(userLoggedIn(true));
-          if (data.users) {
-            dispatch(usersFetched(data.users))
-          }
-          if (data.instructors) {
-            dispatch(instructorsFetched(data.instructors))
-          }
-          dispatch(studentsFetched(data.students))
-          dispatch(coursesFetched(data.courses))
           dispatch(setErrors([]))
         })
       }else{
@@ -82,7 +64,6 @@ const userSlice = createSlice({
   name: 'user',
   initialState: {
     entities: [],
-    currentUser: {},
     status: 'idle',
     loggedIn: false,
   },
@@ -97,7 +78,7 @@ const userSlice = createSlice({
       state.entities = action.payload;
     },
     userLogInFetch(state, action) {
-      state.currentUser = {
+      state.entities = [...state.entities, {
         id: action.payload.id,
         first_name: action.payload.first_name,
         last_name: action.payload.last_name,
@@ -109,13 +90,13 @@ const userSlice = createSlice({
         zip_code: action.payload.zip_code,
         client_account: action.payload.client_account,
         role: action.payload.role
-      };
+      }];
     },
     userLoggedIn(state, action) {
       state.loggedIn = action.payload
     },
     userLogout(state, action) {
-      state.currentUser = action.payload
+      state.entities = action.payload
     },
   },
 });
