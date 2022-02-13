@@ -31,7 +31,6 @@ const instructorsSlice = createSlice({
   name: 'instructors',
   initialState: {
     entities: [],
-    currentInstructor: {},
     status: 'idle',
   },
   reducers: {
@@ -44,11 +43,8 @@ const instructorsSlice = createSlice({
     instructorsFetched(state, action) {
       state.entities = action.payload;
     },
-    instructorFetched(state, action) {
-      state.currentInstructor = action.payload;
-    },
     instructorAdded(state, action) {
-      state.entities.push({
+      state.entities = [...state.entities, {
         id: action.payload.id,
         first_name: action.payload.first_name,
         last_name: action.payload.last_name,
@@ -58,7 +54,7 @@ const instructorsSlice = createSlice({
         city: action.payload.city,
         state: action.payload.state,
         zip_code: action.payload.zip_code,
-      })
+      }]
     },
     instructorRemoved(state, action) {
       state.entities = state.entities.filter(instructor => instructor.id !== action.payload)
