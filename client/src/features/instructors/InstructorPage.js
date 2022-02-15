@@ -1,10 +1,9 @@
 import { useEffect } from "react"
 import { Container, Row, Button } from "react-bootstrap"
-import { customStyles } from "../../Globals"
 import { useDispatch, useSelector } from "react-redux"
 import { instructorRemoved, instructorActionLoading, instructorAdded } from "./instructorsSlice"
 import { setErrors } from "../../errorHandling/errorsSlice"
-import { baseUrl, headers, getToken } from "../../Globals";
+import { customStyles, headers, getToken } from "../../Globals";
 import { useNavigate, useParams } from "react-router-dom"
 
 
@@ -18,7 +17,7 @@ const InstructorPage = () => {
   const instructor = useSelector(state => state.instructors.entities.find(instructor => instructor.id === parseInt(instructorId, 10)))
 
   useEffect(()=> {
-    fetch(baseUrl + `/instructors/${instructorId}`, {
+    fetch(`/instructors/${instructorId}`, {
       method: "GET",
       headers: {
         ...headers,
@@ -41,7 +40,7 @@ const InstructorPage = () => {
   const handleRemoveInstructor = () => {
 
     dispatch(instructorActionLoading());
-    fetch(baseUrl + `/instructors/${instructor.id}`, {
+    fetch(`/instructors/${instructor.id}`, {
       method: "DELETE",
       headers: {
         ...headers,
