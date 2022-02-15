@@ -5,8 +5,6 @@ export const headers = {
 
 export const capitalizeWord = (word) => word.charAt(0).toUpperCase() + word.slice(1)
 
-export const baseUrl = "http://localhost:3000"
-// export const baseUrl = "https://kidblossom-guitar-school.herokuapp.com"
 
 export const getToken = () => {
   return {
@@ -60,7 +58,7 @@ export const formatCourse = (courseObj) => {
       formattedCourse.meeting_day = "3";
       break;
     case "thursday":
-      formattedCourse.meeting_dayay = "4";
+      formattedCourse.meeting_day = "4";
       break;
     case "friday":
       formattedCourse.meeting_day = "5";
@@ -123,4 +121,34 @@ export const formatCourse = (courseObj) => {
   
   formattedCourse.start_time = new Date(courseObj.start_time)
   return formattedCourse
+}
+
+export const sortByDay = (day) => {
+  let formattedDay
+  switch (day) {
+    case "sunday":
+      day = 0;
+      break;
+    case "monday":
+      day = 1;
+      break;
+    case "tuesday":
+      day = 2;
+      break;
+    case "wednesday":
+      day = 3;
+      break;
+    case "thursday":
+      day = 4;
+      break;
+    case "friday":
+      day = 5;
+      break;
+    case "saturday":
+      day = 6;
+      break;
+    default:
+      day = 0;
+  }
+  return formattedDay
 }
