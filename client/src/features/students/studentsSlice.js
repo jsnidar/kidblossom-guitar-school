@@ -1,11 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { baseUrl, getToken, headers } from "../../Globals";
+import { getToken, headers } from "../../Globals";
 import { setErrors } from "../../errorHandling/errorsSlice";
 
 export function fetchStudents() {
   return function (dispatch) {
+    dispatch(studentActionLoading())
     
-    fetch(baseUrl + '/students', {
+    fetch('/students', {
       method: "GET",
       headers: {
         ...headers,
@@ -17,10 +18,12 @@ export function fetchStudents() {
         res.json()
         .then(students => {
           dispatch(studentsFetched(students))
+          dispatch(studentFetchSucceeded())
         })
       }else{
         res.json().then(errors => {
           dispatch(setErrors(errors))
+          dispatch(studentFetchRejected())
         })
       }
     })
@@ -36,6 +39,9 @@ const studentsSlice = createSlice({
   reducers: {
     studentFetchRejected(state, action) {
       state.status = "rejected"
+    },
+    studentFetchSucceeded(state, action) {
+      state.status = "succeeded"
     },
     studentActionLoading(state, action) {
       state.status = "loading"
@@ -61,6 +67,10 @@ const studentsSlice = createSlice({
   }
 })
 // export the action creators
-export const { studentAdded, studentRemoved, studentUpdated, studentFetchRejected, studentsFetched, studentActionLoading } = studentsSlice.actions;
+export const { studentAdded, studentRemoved, studentUpdated, studentFetchRejected, studentFetchSucceeded, studentsFetched, studentActionLoading } = studentsSlice.actions;
 
 export default studentsSlice.reducer;
+
+export const selectAllStudents = state => state.students.entities 
+
+export const selectStudentById = (state, studentId) => state.students.entities.find(student => student.id === parseInt(studentId))
