@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Form, Container, Row, Col } from 'react-bootstrap';
-import { customStyles, formatCourse } from '../../Globals';
-import { baseUrl, headers, getToken } from "../../Globals";
+import { customStyles, formatCourse, headers, getToken} from '../../Globals';
 import { useDispatch, useSelector } from 'react-redux';
-import { courseAdded, courseUpdated, courseFetchRejected, courseActionLoading } from './coursesSlice';
+import { courseAdded, courseUpdated, courseFetchRejected, courseActionLoading, selectCourseById, coursesFetchSucceeded } from './coursesSlice';
 import { setErrors } from '../../errorHandling/errorsSlice';
 import ErrorAlert from '../../errorHandling/ErrorAlert';
 import Datetime from "react-datetime"
+import AddStudent from './AddStudent';
 import { useNavigate, useParams } from 'react-router-dom';
+import { studentActionLoading, studentFetchRejected, studentFetchSucceeded, studentsFetched, selectAllStudents } from '../students/studentsSlice';
 
 const CourseForm = () => {
 
@@ -16,11 +17,53 @@ const CourseForm = () => {
   let navigate = useNavigate()
 
   const { classId } = useParams()
-  const course = useSelector(state => state.courses.entities.find(course => course.id === parseInt(classId, 10)))
+
+  const course = useSelector(state => selectCourseById(state, classId))
+  const courseStatus = useSelector(state => state.courses.status)
+  const studentStatus = useSelector(state => state.students.status)
+  const students = useSelector(selectAllStudents)
+  const [listId, setListId] = useState(1)
+
+  const [formData, setFormData ] = useState({
+    name: "",
+    meeting_day: "",
+    status: '',
+    setting: '',
+    start_date: '',
+    start_time: '',
+    level: '',
+    students: []
+  })
 
   useEffect(()=> {
+    if(studentStatus === 'idle') {
+      dispatch(studentActionLoading())
+      fetch(`/students/`, {
+        method: "GET",
+        headers: {
+          ...headers,
+          ...getToken()
+        },
+      })
+      .then(res => {
+        if(res.ok) {
+          res.json()
+          .then(students => {
+            dispatch(studentsFetched(students))
+            dispatch(studentFetchSucceeded())
+          })
+        }else{
+          res.json().then(errors => {
+            dispatch(setErrors(errors))
+            dispatch(studentFetchRejected())
+          })
+        }
+      })
+    }
+    
     if (classId){
-      fetch(baseUrl + `/courses/${classId}`, {
+      dispatch(studentActionLoading())
+      fetch(`/courses/${classId}`, {
         method: "GET",
         headers: {
           ...headers,
@@ -31,8 +74,21 @@ const CourseForm = () => {
         if(res.ok) {
           res.json()
           .then(course => {
+            dispatch(coursesFetchSucceeded())
+            let initialListId = 0
+            const formattedCourse = formatCourse(course)
+            const studentsWithListIds = course.students.map(student => {
+              initialListId++
+              const courseId = course.student_courses.find(course => course.student_id === student.id).id
+              return {
+                listId: initialListId, 
+                full_name: student.full_name, 
+                id: student.id, 
+                course_id: courseId}
+            })
+            setFormData({...formattedCourse, students: studentsWithListIds})
+            setListId(initialListId)
             dispatch(courseAdded(course))
-            setFormData(formatCourse(course))
           })
         }else{
           res.json().then(errors => {
@@ -41,17 +97,8 @@ const CourseForm = () => {
         }
       })
     }
-  },[classId, dispatch])
 
-  const [formData, setFormData ] = useState({
-    name: "",
-    meeting_day: "",
-    status: '',
-    setting: '',
-    start_date: '',
-    start_time: '',
-    level: ''
-  })
+  },[courseStatus, classId, studentStatus, course])
 
   const handleCancel = () => {
     setFormData({
@@ -61,10 +108,60 @@ const CourseForm = () => {
       setting: '',
       start_date: '',
       start_time: '',
-      level: ''
+      level: '',
+      students: []
     })
     classId ? navigate(`/classes/${classId}`) : navigate('/classes')
   }
+
+  const addStudent = () => {
+    setFormData({...formData, students: [
+      ...formData.students, {
+        listId: listId, 
+        full_name: '', 
+        student_id: '', 
+      }
+    ]})
+    setListId(listId + 1)
+  }
+
+  const updateStudent = (id, listId) => {
+    const newStudent = students.find(student => student.id === parseInt(id, 10))
+    const updatedStudents = formData.students.map(student => {
+      if (student.listId === listId) {
+        return {
+          listId: listId,
+          full_name: newStudent.full_name,
+          student_id: newStudent.id,
+        }
+      }else{
+        return student
+      }
+    })
+    setFormData({...formData, students: updatedStudents})
+  }
+
+  const removeStudent = (studentToRemove) => {
+    if (!course || (course && !course.students.find(student => student.id === studentToRemove.id))) {
+      setFormData({...formData, students: formData.students.filter((student) => student !== studentToRemove)})
+    }else{
+      const updatedStudents = formData.students.map( student => {
+        if(student.id === studentToRemove.id) {
+          return {id: studentToRemove.course_id, _destroy: '1'}
+        }else{
+          return student
+        }
+      })
+      setFormData({...formData, students: updatedStudents})
+    }
+  }
+
+  const renderStudents = formData.students.filter(student => student.listId !== undefined).map(student => <AddStudent
+    key={student.listId}
+    student={student}
+    updateStudent={updateStudent}
+    removeStudent={removeStudent}
+    />)
 
   const handleChange = (e) => {
     e.target ? 
@@ -72,10 +169,23 @@ const CourseForm = () => {
     setFormData({...formData, start_time: e._d})
   }
 
-  const coursePost = (strongParams) => {
+  const coursePost = () => {
+    
+    const strongParams = {
+      course: {
+        name: parseInt(formData.name),
+        meeting_day: parseInt(formData.meeting_day),
+        status: parseInt(formData.status),
+        setting: parseInt(formData.setting),
+        start_date: formData.start_date,
+        start_time: formData.start_time,
+        level: parseInt(formData.level),
+        student_courses_attributes: formData.students
+      },
+    }
 
     dispatch(courseActionLoading());
-    fetch(baseUrl + '/courses', {
+    fetch('/courses', {
       method: "POST",
       headers: {
         ...headers,
@@ -100,10 +210,22 @@ const CourseForm = () => {
     })
   }
 
-  const coursePatch = (strongParams) => {
+  const coursePatch = () => {
 
+    const strongParams = {
+      course: {
+        name: parseInt(formData.name),
+        meeting_day: parseInt(formData.meeting_day),
+        status: parseInt(formData.status),
+        setting: parseInt(formData.setting),
+        start_date: formData.start_date,
+        start_time: formData.start_time,
+        level: parseInt(formData.level),
+        student_courses_attributes: formData.students
+      },
+    }
     dispatch(courseActionLoading());
-    fetch(baseUrl + `/courses/${classId}`, {
+    fetch(`/courses/${classId}`, {
       method: "PATCH",
       headers: {
         ...headers,
@@ -117,6 +239,7 @@ const CourseForm = () => {
         .then(course => {
           dispatch(courseUpdated(course))
           dispatch(setErrors([]))
+          dispatch(coursesFetchSucceeded())
           navigate(`/classes/${classId}`)
         })
       }else{
@@ -131,21 +254,10 @@ const CourseForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault()
     
-    const strongParams = {
-      course: {
-        name: parseInt(formData.name),
-        meeting_day: parseInt(formData.meeting_day),
-        status: parseInt(formData.status),
-        setting: parseInt(formData.setting),
-        start_date: formData.start_date,
-        start_time: formData.start_time,
-        level: parseInt(formData.level)
-      },
-    }
-
-    classId ? coursePatch(strongParams) : coursePost(strongParams)
+    classId ? coursePatch() : coursePost()
   }
 
+  console.log(formData.students)
   return (
     <>
       {customStyles}
@@ -241,6 +353,15 @@ const CourseForm = () => {
                />
             </Form.Group>
             </Col>
+          </Row>
+          <Row>
+            Students
+          </Row>
+          <Row>
+            {renderStudents}
+          </Row>
+          <Row>
+            <Button variant='yellow' onClick={addStudent}>Add Student</Button>
           </Row>
           <Row className="justify-content-evenly">
             <Button 
