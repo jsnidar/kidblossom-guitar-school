@@ -5,8 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import 'react-phone-number-input/style.css'
 import PhoneInput from 'react-phone-number-input'
 import UsStateDropdown from '../user/UsStateDropdown';
-import { customStyles } from '../../Globals';
-import { headers, baseUrl, getToken } from '../../Globals';
+import { headers, getToken, customStyles } from '../../Globals';
 import { useDispatch, useSelector } from 'react-redux';
 import { setErrors } from '../../errorHandling/errorsSlice';
 import { instructorAdded, instructorActionLoading, instructorFetchRejected, instructorUpdated } from './instructorsSlice';
@@ -22,7 +21,7 @@ const InstructorForm = () => {
 
   useEffect(()=> {
     if (instructorId){
-      fetch(baseUrl + `/instructors/${instructorId}`, {
+      fetch(`/instructors/${instructorId}`, {
         method: "GET",
         headers: {
           ...headers,
@@ -98,7 +97,7 @@ const InstructorForm = () => {
   }
 
   const instructorPost = (strongParams) => {
-    fetch(baseUrl + '/instructors', {
+    fetch('/instructors', {
       method: "POST",
       headers: {
         ...headers,
@@ -122,7 +121,7 @@ const InstructorForm = () => {
   const instructorPatch = (strongParams) => {
 
     dispatch(instructorActionLoading());
-    fetch(baseUrl + `/instructors/${instructorId}`, {
+    fetch(`/instructors/${instructorId}`, {
       method: "PATCH",
       headers: {
         ...headers,
