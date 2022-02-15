@@ -1,10 +1,10 @@
-import { Container, Col, Row, Button } from "react-bootstrap"
+import { Container, Col, Row, Button, ListGroup } from "react-bootstrap"
 import { useEffect } from "react"
 import { customStyles, formatDate } from "../../Globals"
 import { useDispatch, useSelector } from "react-redux"
-import { courseRemoved, courseActionLoading, courseAdded } from "./coursesSlice"
+import { courseRemoved, courseActionLoading, courseAdded, selectCourseById, coursesFetchSucceeded, courseFetchRejected } from "./coursesSlice"
 import { setErrors } from "../../errorHandling/errorsSlice"
-import { baseUrl, headers, getToken, capitalizeWord } from "../../Globals"
+import { headers, getToken, capitalizeWord } from "../../Globals"
 import { useNavigate, useParams } from "react-router-dom"
 
 
@@ -12,35 +12,42 @@ const CourseCard = () => {
 
   const { classId } = useParams()
 
-  const course = useSelector(state => state.courses.entities.find(course => course.id === parseInt(classId, 10)))
+  const course = useSelector(state => selectCourseById(state, classId))
+  const courseStatus = useSelector(state => state.courses.status)
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
   useEffect(()=> {
-    fetch(baseUrl + `/courses/${classId}`, {
-      method: "GET",
-      headers: {
-        ...headers,
-        ...getToken()
-      },
-    })
-    .then(res => {
-      if(res.ok) {
-        res.json()
-        .then(courseInfo => {
-          dispatch(courseAdded(courseInfo))
-        })
-      }else{
-        res.json().then(errors => {
-          dispatch(setErrors(errors))
-        })
-      }
-    })  },[classId, dispatch])
+    if (courseStatus === 'idle' && !course) {
+      dispatch(courseActionLoading())
+      fetch(`/courses/${classId}`, {
+        method: "GET",
+        headers: {
+          ...headers,
+          ...getToken()
+        },
+      })
+      .then(res => {
+        if(res.ok) {
+          res.json()
+          .then(courseInfo => {
+            dispatch(courseAdded(courseInfo))
+            dispatch(coursesFetchSucceeded())
+          })
+        }else{
+          res.json().then(errors => {
+            dispatch(setErrors(errors))
+            dispatch(courseFetchRejected())
+          })
+        }
+      }) 
+    } 
+  },[courseStatus, classId, course, dispatch])
 
   const handleRemoveCourse = () => {
 
     dispatch(courseActionLoading());
-    fetch(baseUrl + `/courses/${course.id}`, {
+    fetch(`/courses/${course.id}`, {
       method: "DELETE",
       headers: {
         ...headers,
@@ -65,6 +72,11 @@ const CourseCard = () => {
     return name.join(" ")
   }
 
+  const renderStudents = course ? course.students.map(student => {
+    return <ListGroup.Item key={student.id} action onClick={() => navigate(`/students/${student.id}`)}>{student.full_name}</ListGroup.Item>
+  }) : null
+
+  console.log(course)
   return (
     <Container>
       {customStyles}
@@ -86,7 +98,7 @@ const CourseCard = () => {
             Instructor: {course.instructor_name}
           </p>
           <p>
-            Level: {course.level}
+            Level: {course.course_level}
           </p>
           <p>
             Class Setting: {capitalizeWord(course.setting)}
@@ -95,6 +107,11 @@ const CourseCard = () => {
             Class Status: {capitalizeWord(course.status)}
           </p>
         </Col>
+        <Row>Students</Row>
+        <Row>
+          <ListGroup>{renderStudents.length > 0 ? renderStudents: null}</ListGroup>
+        </Row>
+
         <Row className="justify-content-evenly">
           <Button 
             variant='yellow' 
@@ -107,7 +124,7 @@ const CourseCard = () => {
           <Button 
             variant='yellow' 
             onClick={() => navigate('/classes')}
-          >Return to Instructors Page</Button> 
+          >Return to Courses Page</Button> 
         </Row>
       </Row> : null}
     </Container>
