@@ -9,7 +9,7 @@ import { logInFetch } from './userSlice';
 const LogIn = () => {
 
   const errors = useSelector(state => state.errors.entities)
-  const loggedIn = useSelector(state => state.user.loggedIn)
+  const userStatus = useSelector(state => state.user.status)
 
   let navigate = useNavigate()
   const dispatch = useDispatch()
@@ -20,10 +20,10 @@ const LogIn = () => {
   })
 
   useEffect (() => {
-    if (loggedIn) {
+    if (userStatus === 'succeeded') {
       navigate('/')
     }
-  }, [loggedIn, navigate])
+  }, [userStatus, navigate])
   const handleChange = (e) => {
     setFormData({...formData, [e.target.id]: e.target.value})
   }
