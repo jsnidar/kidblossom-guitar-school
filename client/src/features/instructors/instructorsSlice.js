@@ -1,11 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { headers, getToken, baseUrl } from "../../Globals";
+import { headers, getToken } from "../../Globals";
 import { setErrors } from "../../errorHandling/errorsSlice";
 
 export function fetchInstructors() {
   return function (dispatch) {
     
-    fetch(baseUrl + '/instructors', {
+    fetch('/instructors', {
       method: "GET",
       headers: {
         ...headers,
