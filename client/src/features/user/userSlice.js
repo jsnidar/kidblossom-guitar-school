@@ -1,12 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { baseUrl, headers, getToken } from "../../Globals";
+import { headers, getToken } from "../../Globals";
 import { setErrors } from "../../errorHandling/errorsSlice";
 
 export function logInFetch(strongParams) {
   return function (dispatch) {
     
     dispatch({ type: "users/userLoginLoading"});
-    fetch(baseUrl + '/login', {
+    fetch('/login', {
       method: "POST",
       headers: {
         ...headers,
@@ -20,8 +20,8 @@ export function logInFetch(strongParams) {
         .then(data => {
           localStorage.setItem('jwt', data.token)
           dispatch(userLogInFetch(data.user))
-          dispatch(userLoggedIn(true));
           dispatch(setErrors([]))
+          dispatch(userFetchSucceeded())
         })
       }else{
         res.json().then(errors => {
@@ -35,7 +35,8 @@ export function logInFetch(strongParams) {
 
 export function verifyLoggedIn() {
   return function (dispatch) {
-    fetch(baseUrl + '/get-current-user', {
+    dispatch({ type: "users/userLoginLoading"});
+    fetch('/get-current-user', {
       method: "GET",
       headers: {
         ...headers,
@@ -47,8 +48,8 @@ export function verifyLoggedIn() {
         res.json()
         .then(data => {
           dispatch(userLogInFetch(data.user))
-          dispatch(userLoggedIn(true));
           dispatch(setErrors([]))
+          dispatch(userFetchSucceeded())
         })
       }else{
         res.json().then(errors => {
@@ -65,7 +66,6 @@ const userSlice = createSlice({
   initialState: {
     entities: [],
     status: 'idle',
-    loggedIn: false,
   },
   reducers: {
     userLoginLoading(state, action) {
@@ -73,6 +73,9 @@ const userSlice = createSlice({
     },
     userFetchRejected(state, action) {
       state.status = "rejected"
+    },
+    userFetchSucceeded(state, action) {
+      state.status = "succeeded"
     },
     usersFetched(state, action) {
       state.entities = action.payload;
@@ -98,10 +101,17 @@ const userSlice = createSlice({
     userLogout(state, action) {
       state.entities = action.payload
     },
+    userLogoutStatus(state, action) {
+      state.status = 'idle'
+    },
   },
 });
 
 // export the action creators
-export const { userLoggedIn, userLogout, userFetchRejected, usersFetched, userLogInFetch } = userSlice.actions;
+export const { userLoggedIn, userLogout, userLogoutStatus, userFetchSucceeded, userFetchRejected, usersFetched, userLogInFetch } = userSlice.actions;
 
 export default userSlice.reducer;
+
+export const selectAllUsers = state => state.users.entities 
+
+export const selectUserById = (state, userId) => state.users.entities.find(user => user.id === parseInt(userId))
