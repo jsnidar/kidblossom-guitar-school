@@ -5,7 +5,7 @@ class CoursesController < ApplicationController
   def create
     if current_user.role == 'admin' || current_user.role == 'instructor'
       course = current_user.courses.new(course_params)
-      if course.save  
+      if course.save 
         render json: course, status: :created
       else
         render json: course.errors.full_messages, status: :unprocessable_entity
@@ -66,15 +66,17 @@ class CoursesController < ApplicationController
 
   def course_params
     params.require(:course).permit(
-        :name,
-        :meeting_day,
-        :start_date,
-        :start_time,
-        :status,
-        :setting,
-        :id,
-        :level,
-        :user_id
-      )
+      :name,
+      :meeting_day,
+      :start_date,
+      :start_time,
+      :status,
+      :setting,
+      :id,
+      :level,
+      :user_id,
+      :student_courses_attributes => [:id, :student_id, :_destroy]
+    )
   end
+
 end
