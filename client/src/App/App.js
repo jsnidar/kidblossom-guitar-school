@@ -7,7 +7,7 @@ import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import LogIn from '../features/user/LogIn';
 import Home from './Home';
-import { verifyLoggedIn, userLogout, userLoggedIn } from "../features/user/userSlice";
+import { verifyLoggedIn } from "../features/user/userSlice";
 import CoursesContainer from '../features/courses/CoursesContainer';
 import CourseCard from '../features/courses/CourseCard';
 import CourseForm from '../features/courses/CourseForm';
@@ -20,57 +20,24 @@ import StudentsContainer from '../features/students/StudentsContainer';
 
 function App() {
 
-  const loggedIn = useSelector(state => state.user.loggedIn)
-  const currentUser = useSelector(state => state.user.entities[0])
+  const userStatus = useSelector(state => state.user.status)
   const dispatch = useDispatch()
-
-  const logOut = () => {
-    dispatch(userLogout([]))
-    dispatch(userLoggedIn(false));
-    localStorage.removeItem('jwt');
-  }
 
   useEffect(() => {
     const token = localStorage.getItem('jwt')
-    if(token && !loggedIn) {
+    if(userStatus === 'idle') {
       dispatch(verifyLoggedIn(token))
     }
-  },[loggedIn, dispatch])
-
-  const setHomeRoute = () => {
-    if (loggedIn && currentUser) {
-    return <Profile
-             loggedIn={loggedIn} 
-            />
-    }else{
-      return <Home />
-    }
-  }
-
-  // const setCoursesRoute = () => {
-  //   if (loggedIn && (currentUser.role === 'admin' || currentUser.role === "instructor")) {
-  //     return <CoursesContainer />     
-  //   }else{
-  //     return <Home />
-  //   }
-  // }
-
-  // const setInstructorsRoute = () => {
-  //   if (loggedIn && currentUser.role === 'admin') {
-  //     return <InstructorsContainer />     
-  //   }else{
-  //     return <Home />
-  //   }
-  // }
+  },[userStatus, dispatch])
 
   return (
     <>
-      <NavBar loggedIn={loggedIn} logOut={logOut} />
+      <NavBar />
       <BrowserRouter>
         <Routes>
           <Route 
             path='/' 
-            element={setHomeRoute()}
+            element={userStatus !== 'succeeded' ? <Home /> : <Profile />}
           />
           <Route 
             path='/signup' 
@@ -84,6 +51,7 @@ function App() {
               <LogIn />
             } 
           />
+          <Route path='/users/:userId' element={<Profile />} />
           <Route path='/students' element={<StudentsContainer />} />
           <Route path='/students/:studentId' element={<StudentPage />} />
           <Route path='/students/:studentId/edit' element={<StudentForm />} />
