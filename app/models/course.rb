@@ -17,6 +17,7 @@ class Course < ApplicationRecord
   belongs_to :user
   has_many :student_courses
   has_many :students, through: :student_courses
+  accepts_nested_attributes_for :student_courses, allow_destroy: true, reject_if: :reject_student_courses
 
   def instructor_name
     "#{self.user.first_name.capitalize} #{self.user.last_name.capitalize}"
@@ -32,5 +33,9 @@ class Course < ApplicationRecord
 
   def course_level
     self.level.titleize
+  end
+
+  def reject_student_courses(attributes)
+    attributes['student_id'].blank?
   end
 end
