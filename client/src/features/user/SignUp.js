@@ -5,8 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import 'react-phone-number-input/style.css'
 import PhoneInput from 'react-phone-number-input'
 import UsStateDropdown from './UsStateDropdown';
-import { customStyles } from '../../Globals';
-import { headers, baseUrl } from '../../Globals';
+import { customStyles, headers } from '../../Globals';
 import { useDispatch, useSelector } from 'react-redux';
 import { userLoggedIn, userLogInFetch } from './userSlice';
 import { setErrors } from '../../errorHandling/errorsSlice';
@@ -55,7 +54,7 @@ const SignUp = () => {
         receive_notifications: formData.receive_notifications
       }
     }
-    fetch(baseUrl + '/users', {
+    fetch('/users', {
       method: "POST",
       headers: headers,
       body:JSON.stringify(strongParams)
