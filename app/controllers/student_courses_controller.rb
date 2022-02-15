@@ -35,7 +35,5 @@ class StudentCoursesController < ApplicationController
         :student_id,
         :user_id
       )
-    end
-end
-
+  end
 end
