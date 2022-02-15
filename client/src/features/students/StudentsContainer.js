@@ -1,34 +1,61 @@
-import { Container, Row, Button } from "react-bootstrap"
+import { Container, Row, Button, Spinner, ListGroup } from "react-bootstrap"
 import { customStyles } from "../../Globals"
 import { useEffect } from "react"
-import StudentCard from "./StudentCard"
+import ErrorAlert from "../../errorHandling/ErrorAlert"
 import { useSelector, useDispatch } from "react-redux";
-import { fetchStudents } from "./studentsSlice"
+import { fetchStudents, selectAllStudents } from "./studentsSlice"
 import { useNavigate } from "react-router-dom"
 
 
 const StudentsContainer = () => {
 
-  const students = useSelector(state => state.students.entities)
+  const students = useSelector(selectAllStudents)
+  const studentStatus = useSelector(state => state.students.status)
   const dispatch = useDispatch()
   let navigate = useNavigate()
-  
-  useEffect(()=> {
-    dispatch(fetchStudents())
-  },[dispatch])
 
-  const renderStudents = students.length > 0 ? students.map(student => <StudentCard 
+
+  useEffect(() => {
+    if (studentStatus === 'idle') {
+      dispatch(fetchStudents())
+    }
+  }, [studentStatus, dispatch])
+
+  let content
+
+  if (studentStatus === 'loading') {
+    content = <Spinner animation="border" variant="warning" />
+  }else if (studentStatus === 'succeeded') {
+    const sortedStudents = [...students].sort((a, b) => {
+      var nameA = a.full_name.toUpperCase(); 
+      var nameB = b.full_name.toUpperCase(); 
+      if (nameA < nameB) {
+        return -1;
+      }
+      if (nameA > nameB) {
+        return 1;
+      }
+      return 0;
+    });
+    
+    const renderStudents = sortedStudents.map(student => <ListGroup.Item 
       key={student.id}
-      student={student} 
-    />
-  ) : null
+      action onClick={() => navigate(`/students/${student.id}`)}
+      >
+      {student.full_name}
+      </ListGroup.Item>
+    )
+    content = <ListGroup>{renderStudents}</ListGroup>
+  }else if(studentStatus === 'failed'){
+    content = <ErrorAlert />
+  }
 
   return (
     <Container>
       <Row className='pt-2'>
         {customStyles}
         <h2>Students</h2>
-        {renderStudents}
+        {content}
         <Button 
             variant='yellow' 
             onClick={() => navigate(`/students/new`)}
