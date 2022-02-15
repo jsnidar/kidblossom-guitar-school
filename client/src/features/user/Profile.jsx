@@ -1,27 +1,13 @@
 
-import { Container, Row, Button } from "react-bootstrap";
-import { useSelector, useDispatch } from "react-redux";
-import StudentCard from "../students/StudentCard";
+import { Container, Row } from "react-bootstrap";
+import { useSelector } from "react-redux";
 import { customStyles } from "../../Globals";
-import { useNavigate } from "react-router";
-import { useEffect } from "react";
-import { fetchStudents } from "../students/studentsSlice";
+import StudentsContainer from "../students/StudentsContainer";
 
 const Profile = () => {
 
   const user = useSelector(state => state.user.entities[0])
-  const students = useSelector(state => state.students.entities)
-  const dispatch = useDispatch()
-  let navigate = useNavigate()
 
-  useEffect(()=> {
-    dispatch(fetchStudents())
-  },[dispatch])
-
-  const renderStudents = students.length > 0 ? students.map(student => <StudentCard 
-    key={student.id}
-    student={student} 
-  />): null
 
   return (
     <Container>
@@ -34,7 +20,11 @@ const Profile = () => {
       </Row>
       <Row className='border p-1 m-1'>
         <h3 className='border-bottom'>Contact Information</h3>
-        <p>Address: {user.address}, {user.city}, {user.state}, {user.zip_code}</p>
+        <p>Address:</p>
+        <Row className='m-2'>
+        <p>{user.address}</p>
+        <p>{user.city}, {user.state}, {user.zip_code}</p>
+        </Row>
         <p>Phone: {user.primary_phone}</p>
         <p>Email: {user.primary_email}</p>
       </Row>
@@ -44,16 +34,7 @@ const Profile = () => {
         <p>{user.client_account.receive_notifications ? "I am receiving email notifications": "I am not receiving email notifications"}</p>
         <p>Current Balance: ${user.client_account.balance}</p>
       </Row>  */}
-      <Row className='pt-2'>
-        <h2>Students</h2>
-        {renderStudents}
-        <Button 
-            variant='yellow' 
-            onClick={() => navigate(`/students/new`)}
-          >
-            Add a Student
-          </Button>
-      </Row>
+      <StudentsContainer />
     </Container>
   );
 }
