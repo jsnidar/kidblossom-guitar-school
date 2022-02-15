@@ -1,11 +1,20 @@
 import React from 'react';
 import { Container, Navbar, Nav, Button } from 'react-bootstrap';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { customStyles } from '../../Globals';
+import { userLogout, userLogoutStatus } from '../user/userSlice';
 
-const NavBar = ({ logOut }) => {
+const NavBar = () => {
 
-  const loggedIn = useSelector(state => state.user.loggedIn)
+  const userStatus = useSelector(state => state.user.status)
+  const dispatch = useDispatch()
+
+  const logOut = () => {
+    dispatch(userLogout([]))
+    localStorage.removeItem('jwt')
+    dispatch(userLogoutStatus())
+
+  }
 
   const loggedOutLinks = <>
     <Nav.Link href="/">Home</Nav.Link>
@@ -18,9 +27,11 @@ const NavBar = ({ logOut }) => {
     <Nav.Link href="/classes">Classes</Nav.Link>
     <Nav.Link href="/instructors">Instructors</Nav.Link>
     <Nav.Link href='/students'>Students</Nav.Link>
-    <Button variant="yellow-outline" onClick={logOut}>
-      Logout
-    </Button>
+    <Nav.Link href="/">
+      <Button variant="yellow-outline" onClick={logOut}>
+        Logout
+      </Button>
+    </Nav.Link>
   </>
   
   return (
@@ -32,7 +43,7 @@ const NavBar = ({ logOut }) => {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav>
-              { loggedIn ? loggedInLinks : loggedOutLinks }
+              { userStatus === 'succeeded' ? loggedInLinks : loggedOutLinks }
             </Nav>
           </Navbar.Collapse>
         </Container>
