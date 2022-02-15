@@ -16,12 +16,11 @@ class StudentsController < ApplicationController
   end
 
   def index
-    if current_user.role == "admin"
+    if current_user.role == "admin" || current_user.role == "instructor"
       render json: Student.all
     elsif current_user.role == "client"
       render json: current_user.students
     else
-      # I need to figure out logic to render all students for an instructor
       render json: { errors: ['Method not allowed']}, status: :method_not_allowed
     end
   end
