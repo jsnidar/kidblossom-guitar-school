@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Button, Form, Container, Row, Col } from 'react-bootstrap';
 import 'react-phone-number-input/style.css'
 import { customStyles } from '../../Globals';
-import { baseUrl, headers, getToken } from "../../Globals";
+import { headers, getToken } from "../../Globals";
 import { useParams, useNavigate } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
-import { studentAdded, studentUpdated, studentFetchRejected, studentActionLoading } from './studentsSlice';
+import { selectStudentById, studentAdded, studentUpdated, studentFetchRejected, studentActionLoading, studentFetchSucceeded } from './studentsSlice';
 import { setErrors } from '../../errorHandling/errorsSlice';
 import ErrorAlert from '../../errorHandling/ErrorAlert';
 
@@ -16,7 +16,9 @@ const StudentForm = () => {
   const errors = useSelector(state => state.errors.entities)
 
   const { studentId } = useParams()
-  const student = useSelector(state => state.students.entities.find(student => student.id === parseInt(studentId, 10)))
+  const student = useSelector(state => selectStudentById(state, studentId))
+  const studentStatus = useSelector(state => state.students.status)
+
   const role = useSelector(state => state.user.entities[0].role)
   let navigate = useNavigate()
 
@@ -28,8 +30,9 @@ const StudentForm = () => {
   })
  
   useEffect(()=> {
-    if (studentId){
-      fetch(baseUrl + `/students/${studentId}`, {
+    if (studentStatus === 'idle' || !student){
+      dispatch(studentActionLoading())
+      fetch(`/students/${studentId}`, {
         method: "GET",
         headers: {
           ...headers,
@@ -42,6 +45,7 @@ const StudentForm = () => {
           .then(student => {
             dispatch(studentAdded(student))
             setFormData({...student, gender: student.gender === "female" ? 0 : 1})
+            dispatch(studentFetchSucceeded())
           })
         }else{
           res.json().then(errors => {
@@ -50,7 +54,7 @@ const StudentForm = () => {
         }
       })
     }
-  },[studentId, dispatch])
+  },[studentStatus, student, studentId, dispatch])
   
   const handleChange = (e) => {
     setFormData({...formData, [e.target.id]: e.target.value})
@@ -69,7 +73,7 @@ const StudentForm = () => {
   const studentPost = (strongParams) => {
 
     dispatch(studentActionLoading());
-    fetch(baseUrl + '/students', {
+    fetch('/students', {
       method: "POST",
       headers: {
         ...headers,
@@ -96,7 +100,7 @@ const StudentForm = () => {
   const studentPatch = (strongParams) => {
 
     dispatch(studentActionLoading());
-    fetch(baseUrl + `/students/${student.id}`, {
+    fetch(`/students/${student.id}`, {
       method: "PATCH",
       headers: {
         ...headers,
