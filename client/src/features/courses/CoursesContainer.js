@@ -1,21 +1,12 @@
 import { Row, Container, Button } from "react-bootstrap"
 import { customStyles } from "../../Globals"
 import CoursesList from "./CoursesList";
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { fetchCourses } from "./coursesSlice";
 
 
 const CoursesContainer = () => {
 
-  const courses = useSelector(state => state.courses.entities)
   let navigate = useNavigate()
-  const dispatch = useDispatch()
-
-  useEffect(()=> {
-    dispatch(fetchCourses())
-  },[dispatch])
 
   return (
     <Container>
@@ -30,12 +21,10 @@ const CoursesContainer = () => {
           Add a Class
         </Button>
       </Row>
-      {courses && courses.length > 0 ?
       <Row className='pt-2'>
       {customStyles}
-      
       <CoursesList />
-      </Row> : null }
+      </Row>
     </Container>
   )
 }
