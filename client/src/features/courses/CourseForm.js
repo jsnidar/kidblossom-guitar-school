@@ -98,7 +98,7 @@ const CourseForm = () => {
       })
     }
 
-  },[courseStatus, classId, studentStatus, course])
+  },[courseStatus, classId, studentStatus, course, dispatch])
 
   const handleCancel = () => {
     setFormData({
