@@ -5,7 +5,7 @@ import { customStyles } from '../../Globals';
 import { headers, getToken } from "../../Globals";
 import { useParams, useNavigate } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectStudentById, studentAdded, studentUpdated, studentFetchRejected, studentActionLoading, studentFetchSucceeded, studentsFetched, fetchStudents } from './studentsSlice';
+import { selectStudentById, studentAdded, studentFetchRejected, studentActionLoading, studentFetchSucceeded, studentsFetched } from './studentsSlice';
 import { setErrors } from '../../errorHandling/errorsSlice';
 import ErrorAlert from '../../errorHandling/ErrorAlert';
 
