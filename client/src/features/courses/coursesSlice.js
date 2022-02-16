@@ -48,7 +48,7 @@ export const fetchCourses = () => {
       }else{
         res.json().then(errors => {
           dispatch(setErrors(errors))
-          dispatch(courseFetchRejected())
+          dispatch(coursesFetchRejected())
         })
       }
     })
@@ -181,7 +181,7 @@ const coursesSlice = createSlice({
   // }
 })
 // export the action creators
-export const { courseAdded, courseRemoved, courseUpdated, courseFetchRejected, coursesFetched, coursesFetchSucceeded, courseActionLoading, courseFetched } = coursesSlice.actions;
+export const { courseAdded, courseRemoved, courseUpdated, coursesFetchRejected, coursesFetched, coursesFetchSucceeded, courseActionLoading, courseFetched } = coursesSlice.actions;
 
 export default coursesSlice.reducer;
 
