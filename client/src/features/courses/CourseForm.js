@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button, Form, Container, Row, Col } from 'react-bootstrap';
 import { customStyles, formatCourse, headers, getToken} from '../../Globals';
 import { useDispatch, useSelector } from 'react-redux';
-import { courseAdded, courseUpdated, courseFetchRejected, courseActionLoading, selectCourseById, coursesFetchSucceeded } from './coursesSlice';
+import { courseAdded, courseUpdated, coursesFetchRejected, courseActionLoading, selectCourseById, coursesFetchSucceeded } from './coursesSlice';
 import { setErrors } from '../../errorHandling/errorsSlice';
 import ErrorAlert from '../../errorHandling/ErrorAlert';
 import Datetime from "react-datetime"
@@ -203,7 +203,7 @@ const CourseForm = () => {
         })
       }else{
         res.json().then(errors => {
-          dispatch(courseFetchRejected())
+          dispatch(coursesFetchRejected())
           dispatch(setErrors(errors))
         })
       }
@@ -244,7 +244,7 @@ const CourseForm = () => {
         })
       }else{
         res.json().then(errors => {
-          dispatch(courseFetchRejected())
+          dispatch(coursesFetchRejected())
           dispatch(setErrors(errors))
         })
       }
