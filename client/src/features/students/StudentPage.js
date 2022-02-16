@@ -54,7 +54,11 @@ const StudentPage = () => {
         ...getToken()
       },
     })
-    .then(dispatch(studentRemoved(student.id)))
+    .then( e => {
+      dispatch(studentFetchSucceeded())
+      dispatch(studentRemoved(student.id))
+      navigate('/students')
+    })
   }
 
   return (

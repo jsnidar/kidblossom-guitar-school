@@ -5,7 +5,7 @@ import { customStyles } from '../../Globals';
 import { headers, getToken } from "../../Globals";
 import { useParams, useNavigate } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectStudentById, studentAdded, studentUpdated, studentFetchRejected, studentActionLoading, studentFetchSucceeded } from './studentsSlice';
+import { selectStudentById, studentAdded, studentUpdated, studentFetchRejected, studentActionLoading, studentFetchSucceeded, studentsFetched, fetchStudents } from './studentsSlice';
 import { setErrors } from '../../errorHandling/errorsSlice';
 import ErrorAlert from '../../errorHandling/ErrorAlert';
 
@@ -18,19 +18,21 @@ const StudentForm = () => {
   const { studentId } = useParams()
   const student = useSelector(state => selectStudentById(state, studentId))
   const studentStatus = useSelector(state => state.students.status)
-
-  const role = useSelector(state => state.user.entities[0].role)
   let navigate = useNavigate()
 
-  const [formData, setFormData ] = useState({
-    first_name: '', 
-    last_name: '',
-    birth_date: '',
-    gender: '',
-  })
+  const [formData, setFormData ] = useState(student ? 
+    {...student, gender: student.gender === "female" ? 0 : 1} :
+    {
+      first_name: '', 
+      last_name: '',
+      birth_date: '',
+      gender: '',
+    }
+  )
  
   useEffect(()=> {
-    if (studentStatus === 'idle' || !student){
+
+    if (studentId && studentStatus === 'idle'){
       dispatch(studentActionLoading())
       fetch(`/students/${studentId}`, {
         method: "GET",
@@ -43,12 +45,13 @@ const StudentForm = () => {
         if(res.ok) {
           res.json()
           .then(student => {
+            dispatch(studentFetchSucceeded())
             dispatch(studentAdded(student))
             setFormData({...student, gender: student.gender === "female" ? 0 : 1})
-            dispatch(studentFetchSucceeded())
           })
         }else{
           res.json().then(errors => {
+            dispatch(studentFetchRejected())
             dispatch(setErrors(errors))
           })
         }
@@ -66,9 +69,8 @@ const StudentForm = () => {
       last_name: '',
       birth_date: '',
       gender: '',
-      client_account: ''
     })
-    studentId ? navigate(`/students/${studentId}`) : (role === 'client' ? navigate('/') : navigate('/students'))
+    studentId ? navigate(`/students/${studentId}`) : navigate('/students')
   }
   const studentPost = (strongParams) => {
 
@@ -85,8 +87,9 @@ const StudentForm = () => {
       if(res.ok) {
         res.json()
         .then(student => {
+          dispatch(studentFetchSucceeded())
           dispatch(studentAdded(student))
-          navigate(`/students/${student.id}`)
+          navigate(`/students/`)
         })
       }else{
         res.json().then(errors => {
@@ -111,9 +114,10 @@ const StudentForm = () => {
     .then(res => {
       if(res.ok) {
         res.json()
-        .then(student => {
-          dispatch(studentUpdated(student))
-          navigate(`/students/${studentId}`)
+        .then(students => {
+          dispatch(studentFetchSucceeded())
+          dispatch(studentsFetched(students))
+          navigate(`/students/`)
         })
       }else{
         res.json().then(errors => {
@@ -126,15 +130,12 @@ const StudentForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-
-    debugger
     const strongParams = {
       student: {
         first_name: formData.first_name,
         last_name: formData.last_name,
         birth_date: formData.birth_date,
         gender: parseInt(formData.gender, 10),
-        client_account_id: student.client_account_id
       },
     }
 
