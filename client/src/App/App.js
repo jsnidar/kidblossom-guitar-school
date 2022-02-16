@@ -17,6 +17,7 @@ import InstructorForm from '../features/instructors/InstructorForm';
 import StudentPage from '../features/students/StudentPage';
 import StudentForm from '../features/students/StudentForm';
 import StudentsContainer from '../features/students/StudentsContainer';
+import Dashboard from '../features/user/Dashboard';
 
 function App() {
 
@@ -37,7 +38,7 @@ function App() {
         <Routes>
           <Route 
             path='/' 
-            element={userStatus !== 'succeeded' ? <Home /> : <Profile />}
+            element={userStatus !== 'succeeded' ? <Home /> : <Dashboard />}
           />
           <Route 
             path='/signup' 
@@ -52,18 +53,18 @@ function App() {
             } 
           />
           <Route path='/users/:userId' element={<Profile />} />
+          
           <Route path='/students' element={<StudentsContainer />} />
           <Route path='/students/:studentId' element={<StudentPage />} />
           <Route path='/students/:studentId/edit' element={<StudentForm />} />
           <Route path='/students/new' element={<StudentForm />} />
+          
           <Route path='/classes' element={<CoursesContainer />} />
           <Route path='/classes/:classId' element={<CourseCard />} />
           <Route path='/classes/:classId/edit' element={<CourseForm />} />
           <Route path='/classes/new' element={<CourseForm />} />
-          <Route 
-            path='/instructors' 
-            element={<InstructorsContainer /> }
-          />
+          
+          <Route path='/instructors' element={<InstructorsContainer /> } />
           <Route path='/instructors/:instructorId' element={<InstructorPage />} />
           <Route path='/instructors/:instructorId/edit' element={<InstructorForm />} />
           <Route path='/instructors/new' element={<InstructorForm />} />
