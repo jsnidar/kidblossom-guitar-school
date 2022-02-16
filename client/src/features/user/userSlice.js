@@ -112,6 +112,6 @@ export const { userLoggedIn, userLogout, userLogoutStatus, userFetchSucceeded, u
 
 export default userSlice.reducer;
 
-export const selectAllUsers = state => state.users.entities 
+export const selectAllUsers = state => state.user.entities 
 
-export const selectUserById = (state, userId) => state.users.entities.find(user => user.id === parseInt(userId))
+export const selectUserById = (state, userId) => state.user.entities.find(user => user.id === parseInt(userId))
