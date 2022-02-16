@@ -2,7 +2,7 @@ import { Container, Col, Row, Button, ListGroup } from "react-bootstrap"
 import { useEffect } from "react"
 import { customStyles, formatDate } from "../../Globals"
 import { useDispatch, useSelector } from "react-redux"
-import { courseRemoved, courseActionLoading, courseAdded, selectCourseById, coursesFetchSucceeded, courseFetchRejected } from "./coursesSlice"
+import { courseRemoved, courseActionLoading, courseAdded, selectCourseById, coursesFetchSucceeded, coursesFetchRejected } from "./coursesSlice"
 import { setErrors } from "../../errorHandling/errorsSlice"
 import { headers, getToken, capitalizeWord } from "../../Globals"
 import { useNavigate, useParams } from "react-router-dom"
@@ -37,7 +37,7 @@ const CourseCard = () => {
         }else{
           res.json().then(errors => {
             dispatch(setErrors(errors))
-            dispatch(courseFetchRejected())
+            dispatch(coursesFetchRejected())
           })
         }
       }) 
@@ -76,7 +76,6 @@ const CourseCard = () => {
     return <ListGroup.Item key={student.id} action onClick={() => navigate(`/students/${student.id}`)}>{student.full_name}</ListGroup.Item>
   }) : null
 
-  console.log(course)
   return (
     <Container>
       {customStyles}
