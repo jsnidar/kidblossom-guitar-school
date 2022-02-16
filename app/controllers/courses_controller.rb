@@ -16,12 +16,17 @@ class CoursesController < ApplicationController
   end
 
   def index
-    if current_user.role === 'admin'
+    if current_user.role == 'admin'
       courses = Course.all
       render json: courses
-    elsif current_user.role === 'instructor'
+    elsif current_user.role == 'instructor'
       courses = current_user.courses
       render json: courses 
+    elsif current_user.role == 'client'
+      student_ids = current_user.students.pluck(:id)
+      course_ids = StudentCourse.where(student_id: student_ids).pluck(:course_id)
+      courses = Course.where(id: course_ids)
+      render json: courses
     else
       render json: { errors: ['Method not allowed']}, status: :method_not_allowed
     end
