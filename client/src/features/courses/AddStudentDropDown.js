@@ -2,7 +2,6 @@
 import { Form } from "react-bootstrap";
 import { useSelector } from 'react-redux'
 import { selectAllStudents } from "../students/studentsSlice";
-import { selectAllCourses } from "./coursesSlice";
 
 const AddStudentDropDown = ({ student , updateStudent }) => {
 
