@@ -7,6 +7,7 @@ import { userLogout, userLogoutStatus } from '../user/userSlice';
 const NavBar = () => {
 
   const userStatus = useSelector(state => state.user.status)
+  const user = useSelector(state => state.user.entities[0])
   const dispatch = useDispatch()
 
   const logOut = () => {
@@ -24,6 +25,7 @@ const NavBar = () => {
 
   const loggedInLinks = <>
     <Nav.Link href="/">Home</Nav.Link>
+    <Nav.Link href={user ? `/users/${user.id}` : '/'}>Profile</Nav.Link>
     <Nav.Link href="/classes">Classes</Nav.Link>
     <Nav.Link href="/instructors">Instructors</Nav.Link>
     <Nav.Link href='/students'>Students</Nav.Link>
