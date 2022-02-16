@@ -32,7 +32,7 @@ class StudentsController < ApplicationController
       if @student
         render json: @student
       else
-        render json: @student.errors.full_messages, status: :not_found
+        render json: current_user.errors.full_messages, status: :not_found
       end
     elsif current_user.role == 'admin' || current_user.role == 'instructor'
       @student = Student.find_by(id: params[:id])
@@ -60,6 +60,7 @@ class StudentsController < ApplicationController
 
   def destroy
     @student.destroy
+    render json: {}
   end
 
   private
