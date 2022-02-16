@@ -5,13 +5,14 @@ class StudentsController < ApplicationController
   def create
     if current_user.role == 'client'
       @student = @user.students.new(student_params)
+      @student.client_account_id = @user.client_account.id
       if @student.save  
         render json: @student, status: :created
       else
         render json: @student.errors.full_messages, status: :unprocessable_entity
       end
     else
-      render json: { errors: ['Method not allowed']}, status: :method_not_allowed
+      render json: current_user.errors.full_messages, status: :method_not_allowed
     end
   end
 
@@ -26,24 +27,39 @@ class StudentsController < ApplicationController
   end
 
   def show
-    if @student
-        # I need to add logic for instructor to view a student
-      render json: @student
-    else
-      render json: @student.errors.full_messages, status: :not_foundj
+    if current_user.role == 'client'
+      @student = current_user.students.find_by(id: params[:id])
+      if @student
+        render json: @student
+      else
+        render json: @student.errors.full_messages, status: :not_found
+      end
+    elsif current_user.role == 'admin' || current_user.role == 'instructor'
+      @student = Student.find_by(id: params[:id])
+      if @student
+        render json: @student
+      else
+        render json: @student.errors.full_messages, status: :not_found
+      end
     end
   end
 
   def update
     if @student.update(student_params)
-      render json: @student
+      if current_user.role == "admin" || current_user.role == "instructor"
+        render json: Student.all
+      elsif current_user.role == "client"
+        render json: current_user.students
+      else
+        render json: { errors: ['Method not allowed']}, status: :method_not_allowed
+      end
     else
       render json: student.errors.full_messages, status: :unprocessable_entity
     end
   end
 
   def destroy
-    student.destroy
+    @student.destroy
   end
 
   private
@@ -66,7 +82,6 @@ class StudentsController < ApplicationController
       :last_name, 
       :birth_date,
       :gender,
-      :client_account_id
     )
   end
 end
