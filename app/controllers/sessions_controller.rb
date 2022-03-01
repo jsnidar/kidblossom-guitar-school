@@ -4,9 +4,9 @@ class SessionsController < ApplicationController
   def get_current_user
     
     if logged_in?
-      render json: { user: UserSerializer.new(@user), token: @token}, status: :ok
+      render json: { user: UserSerializer.new(@user), token: @token }, status: :ok
     else
-      render json: user.errors.full_messages
+      render json: { errors: @user.errors.full_messages }
     end
   end
 
