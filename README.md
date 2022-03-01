@@ -1,9 +1,15 @@
-# Project Template: React/Rails API
+# Kidblossom Guitar School
 
 ## Description
 
-This project is scaffolded so that you can build a React frontend and Rails
-backend together, and easily deploy them to Heroku.
+Welcome to the Kidblossom Guitar School application. This application has three types of users: clients, instructors, and administrators. The application allows the school to manage enrollment and registration for classes. 
+
+Here is a <a href="https://drive.google.com/file/d/15ONVqw9Ky8QoN0kUwKl0K9BSZQ5pMmxV/view?usp=sharing">link</a> to a video description of the application.
+
+## Usage
+
+To use the application go to <a href="https://kidblossom-guitar-school.herokuapp.com/">https://kidblossom-guitar-school.herokuapp.com/</a>.
+
 
 ## Requirements
 
