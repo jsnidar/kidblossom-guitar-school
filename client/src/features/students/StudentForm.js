@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { selectStudentById, studentAdded, studentFetchRejected, studentActionLoading, studentFetchSucceeded, studentsFetched } from './studentsSlice';
 import { setErrors } from '../../errorHandling/errorsSlice';
 import ErrorAlert from '../../errorHandling/ErrorAlert';
+import ClientAccountsDropdown from './ClientAccountsDropdown';
 
 
 const StudentForm = () => {
@@ -18,7 +19,9 @@ const StudentForm = () => {
   const { studentId } = useParams()
   const student = useSelector(state => selectStudentById(state, studentId))
   const studentStatus = useSelector(state => state.students.status)
+  const user = useSelector(state => state.user.entities[0])
   let navigate = useNavigate()
+  const [clients, setClients] = useState([])
 
   const [formData, setFormData ] = useState(student ? 
     {...student, gender: student.gender === "female" ? 0 : 1} :
@@ -58,6 +61,29 @@ const StudentForm = () => {
       })
     }
   },[studentStatus, student, studentId, dispatch])
+
+  useEffect(()=> {
+    if(user && user.role !== 'client'){
+      dispatch(studentActionLoading())
+      fetch(`/client_accounts/`, {
+        method: "GET",
+        headers: {
+          ...headers,
+          ...getToken()
+        },
+      })
+      .then(res => {
+        if(res.ok) {
+          res.json()
+          .then(clients => setClients(clients))
+        }else{
+          res.json().then(errors => {
+            dispatch(setErrors(errors))
+          })
+        }
+      })
+    }
+  },[user, dispatch])
   
   const handleChange = (e) => {
     setFormData({...formData, [e.target.id]: e.target.value})
@@ -69,6 +95,7 @@ const StudentForm = () => {
       last_name: '',
       birth_date: '',
       gender: '',
+
     })
     studentId ? navigate(`/students/${studentId}`) : navigate('/students')
   }
@@ -130,12 +157,20 @@ const StudentForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    const strongParams = {
+    const strongParams = user.role === 'client' ? {
       student: {
         first_name: formData.first_name,
         last_name: formData.last_name,
         birth_date: formData.birth_date,
         gender: parseInt(formData.gender, 10),
+      },
+    } : {
+      student: {
+        first_name: formData.first_name,
+        last_name: formData.last_name,
+        birth_date: formData.birth_date,
+        gender: parseInt(formData.gender, 10),
+        client_account_id: formData.client_account_id
       },
     }
 
@@ -151,6 +186,9 @@ const StudentForm = () => {
           <Row>
             { studentId ? <h2>Edit Student</h2> : <h2>Add Student</h2> }
             { errors.length > 0 ? <ErrorAlert errors={errors} /> : null }
+          </Row>
+          <Row>
+            {clients.length > 0 ? <ClientAccountsDropdown formData={formData} clients={clients} handleChange={handleChange} /> : null}
           </Row>
           <Row>
             <Col>
