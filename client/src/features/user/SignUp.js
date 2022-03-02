@@ -7,7 +7,7 @@ import PhoneInput from 'react-phone-number-input'
 import UsStateDropdown from './UsStateDropdown';
 import { customStyles, headers } from '../../Globals';
 import { useDispatch, useSelector } from 'react-redux';
-import { userLoggedIn, userLogInFetch } from './userSlice';
+import { userFetchSucceeded, userLoggedIn, userLogInFetch } from './userSlice';
 import { setErrors } from '../../errorHandling/errorsSlice';
 
 const SignUp = () => {
@@ -65,7 +65,7 @@ const SignUp = () => {
         .then(data => {
           localStorage.setItem("jwt", data.token)
           dispatch(userLogInFetch(data.user))
-          dispatch(userLoggedIn(true));
+          dispatch(userFetchSucceeded());
         })
         .then(navigate('/'))
       }else{

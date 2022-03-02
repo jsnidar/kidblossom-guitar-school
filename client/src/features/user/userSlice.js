@@ -95,9 +95,6 @@ const userSlice = createSlice({
         role: action.payload.role
       }];
     },
-    userLoggedIn(state, action) {
-      state.loggedIn = action.payload
-    },
     userLogout(state, action) {
       state.entities = action.payload
     },
