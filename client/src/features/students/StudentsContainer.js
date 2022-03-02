@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom"
 const StudentsContainer = () => {
 
   const students = useSelector(selectAllStudents)
+  const user = useSelector(state => state.user.entities[0])
   const studentStatus = useSelector(state => state.students.status)
   const dispatch = useDispatch()
   let navigate = useNavigate()
@@ -38,11 +39,17 @@ const StudentsContainer = () => {
       return 0;
     });
     
-    const renderStudents = sortedStudents.map(student => <ListGroup.Item 
-      key={student.id}
-      action onClick={() => navigate(`/students/${student.id}`)}
-      >
-      {student.full_name}
+    const renderStudents = sortedStudents.map(student => user && user.role === 'client' ? <ListGroup.Item 
+        key={student.id}
+        action onClick={() => navigate(`/students/${student.id}`)}
+        >
+        {student.full_name}
+      </ListGroup.Item> : 
+      <ListGroup.Item 
+        key={student.id}
+        action onClick={() => navigate(`/students/${student.id}`)}
+        >
+        {student.full_name} ({student.parent_name})
       </ListGroup.Item>
     )
     content = <ListGroup>{renderStudents}</ListGroup>
