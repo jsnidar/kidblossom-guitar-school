@@ -16,4 +16,8 @@ class Student < ApplicationRecord
   def full_name
     "#{self.first_name.capitalize} #{self.last_name.capitalize}"
   end
+
+  def parent_name
+    "#{self.client_account.user.full_name}"
+  end
 end
