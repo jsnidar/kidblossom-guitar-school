@@ -11,6 +11,13 @@ class StudentsController < ApplicationController
       else
         render json: @student.errors.full_messages, status: :unprocessable_entity
       end
+    elsif current_user.role == 'admin' || current_user.role == 'instructor'
+      @student = Student.new(student_params)
+      if @student.save  
+        render json: @student, status: :created
+      else
+        render json: @student.errors.full_messages, status: :unprocessable_entity
+      end
     else
       render json: current_user.errors.full_messages, status: :method_not_allowed
     end
@@ -83,6 +90,7 @@ class StudentsController < ApplicationController
       :last_name, 
       :birth_date,
       :gender,
+      :client_account_id
     )
   end
 end
