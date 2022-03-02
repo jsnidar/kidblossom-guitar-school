@@ -2,7 +2,7 @@
   "name": "kidblossom-guitar-school",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://localhost:3000/",
+  "proxy": "https://kidblossom-guitar-school.herokuapp.com/students/",
   "engines": {
     "node": "16.x"
   },
