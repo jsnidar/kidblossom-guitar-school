@@ -1,25 +1,10 @@
 Rails.application.routes.draw do
   
-  
   resources :student_courses
-  resources :users do
-    resources :client_acounts do
-      resources :students
-    end
-    resources :courses do
-      resources :user
-    end
-  end
-  
+  resources :users 
   resources :client_accounts
-
   resources :students 
-  
-  resources :courses do
-    resources :user
-  end
-
-
+  resources :courses 
   resources :instructors
 
   get "/get-current-user" => "sessions#get_current_user"
