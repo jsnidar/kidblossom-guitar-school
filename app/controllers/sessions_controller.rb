@@ -1,8 +1,7 @@
 class SessionsController < ApplicationController
-  skip_before_action :authorized
+  skip_before_action :authorized, only: :login
 
   def get_current_user
-    
     if logged_in?
       render json: { user: UserSerializer.new(current_user), token: @token }, status: :ok
     end
