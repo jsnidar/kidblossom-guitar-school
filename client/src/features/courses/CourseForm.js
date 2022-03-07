@@ -12,18 +12,19 @@ import { studentActionLoading, studentFetchRejected, studentFetchSucceeded, stud
 
 const CourseForm = () => {
 
-  const errors = useSelector(state => state.errors.entities)
   const dispatch = useDispatch()
   let navigate = useNavigate()
-
   const { classId } = useParams()
+
+  const errors = useSelector(state => state.errors.entities)
+  const students = useSelector(selectAllStudents)
+  const studentStatus = useSelector(state => state.students.status)
 
   const course = useSelector(state => selectCourseById(state, classId))
   const courseStatus = useSelector(state => state.courses.status)
-  const studentStatus = useSelector(state => state.students.status)
-  const students = useSelector(selectAllStudents)
+  
   const [listId, setListId] = useState(1)
-
+  const [addedStudents, setAddedStudents] = useState([])
   const [formData, setFormData ] = useState({
     name: "",
     meeting_day: "",
@@ -60,9 +61,12 @@ const CourseForm = () => {
         }
       })
     }
+  },[studentStatus, students, dispatch])
+
+  useEffect(()=> {
     
-    if (classId){
-      dispatch(studentActionLoading())
+    if (courseStatus === 'idle' && classId){
+      dispatch(courseActionLoading())
       fetch(`/courses/${classId}`, {
         method: "GET",
         headers: {
@@ -75,19 +79,6 @@ const CourseForm = () => {
           res.json()
           .then(course => {
             dispatch(coursesFetchSucceeded())
-            let initialListId = 0
-            const formattedCourse = formatCourse(course)
-            const studentsWithListIds = course.students.map(student => {
-              initialListId++
-              const courseId = course.student_courses.find(course => course.student_id === student.id).id
-              return {
-                listId: initialListId, 
-                full_name: student.full_name, 
-                id: student.id, 
-                course_id: courseId}
-            })
-            setFormData({...formattedCourse, students: studentsWithListIds})
-            setListId(initialListId)
             dispatch(courseAdded(course))
           })
         }else{
@@ -98,7 +89,25 @@ const CourseForm = () => {
       })
     }
 
-  },[courseStatus, classId, studentStatus, course, dispatch])
+  },[courseStatus, classId, course, dispatch])
+
+  if(course && addedStudents.length < 1) {
+    let initialListId = 0
+    const formattedCourse = formatCourse(course)
+    const studentsWithListIds = course.students.map(student => {
+      initialListId++
+      return {
+        listId: initialListId, 
+        full_name: student.full_name, 
+        student_id: student.id, 
+        course_id: classId,
+        student_course_id: student.student_courses.find(crs => crs.course_id === course.id).id
+      }
+    })
+    setAddedStudents(studentsWithListIds.map(student => student.student_id))
+    setFormData({...formattedCourse, students: studentsWithListIds})
+    setListId(initialListId)
+  }
 
   const handleCancel = () => {
     setFormData({
@@ -115,45 +124,52 @@ const CourseForm = () => {
   }
 
   const addStudent = () => {
+    setListId(listId + 1)
     setFormData({...formData, students: [
       ...formData.students, {
-        listId: listId, 
+        listId: listId + 1, 
         full_name: '', 
         student_id: '', 
       }
     ]})
-    setListId(listId + 1)
   }
 
   const updateStudent = (id, listId) => {
     const newStudent = students.find(student => student.id === parseInt(id, 10))
+    const added = []
     const updatedStudents = formData.students.map(student => {
       if (student.listId === listId) {
-        return {
+        const studentObj = {
           listId: listId,
           full_name: newStudent.full_name,
           student_id: newStudent.id,
         }
+        added.push(studentObj.student_id)
+        return studentObj
       }else{
+        added.push(student.id)
         return student
       }
     })
+    setAddedStudents(added)
     setFormData({...formData, students: updatedStudents})
   }
 
   const removeStudent = (studentToRemove) => {
-    if (!course || (course && !course.students.find(student => student.id === studentToRemove.id))) {
+    if (!course || (course && !course.students.find(student => student.id === studentToRemove.student_id))) {
       setFormData({...formData, students: formData.students.filter((student) => student !== studentToRemove)})
-    }else{
+    }else{  
+      debugger    
       const updatedStudents = formData.students.map( student => {
-        if(student.id === studentToRemove.id) {
-          return {id: studentToRemove.course_id, _destroy: '1'}
+        if(student.student_id === studentToRemove.student_id) {
+          return {id: studentToRemove.student_course_id, _destroy: '1'}
         }else{
           return student
         }
       })
       setFormData({...formData, students: updatedStudents})
     }
+    setAddedStudents([...addedStudents.filter(id => id !== studentToRemove.id)])
   }
 
   const renderStudents = formData.students.filter(student => student.listId !== undefined).map(student => <AddStudent
@@ -161,6 +177,7 @@ const CourseForm = () => {
     student={student}
     updateStudent={updateStudent}
     removeStudent={removeStudent}
+    addedStudents={addedStudents}
     />)
 
   const handleChange = (e) => {
@@ -211,7 +228,8 @@ const CourseForm = () => {
   }
 
   const coursePatch = () => {
-
+    const existingIds = course.students.map(student => student.id)
+    debugger
     const strongParams = {
       course: {
         name: parseInt(formData.name),
@@ -221,7 +239,7 @@ const CourseForm = () => {
         start_date: formData.start_date,
         start_time: formData.start_time,
         level: parseInt(formData.level),
-        student_courses_attributes: formData.students
+        student_courses_attributes: formData.students.filter(student => !existingIds.includes(student.student_id))
       },
     }
     dispatch(courseActionLoading());
@@ -253,11 +271,9 @@ const CourseForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    
     classId ? coursePatch() : coursePost()
   }
 
-  console.log(formData.students)
   return (
     <>
       {customStyles}
