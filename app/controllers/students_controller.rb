@@ -12,7 +12,8 @@ class StudentsController < ApplicationController
         render json: @student.errors.full_messages, status: :unprocessable_entity
       end
     elsif current_user.role == 'admin' || current_user.role == 'instructor'
-      @student = Student.new(student_params)
+      client = ClientAccount.find_by(id: student_params[:client_account_id])
+      @student = client.students.new(student_params)
       if @student.save  
         render json: @student, status: :created
       else
