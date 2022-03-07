@@ -7,7 +7,7 @@ import PhoneInput from 'react-phone-number-input'
 import UsStateDropdown from './UsStateDropdown';
 import { customStyles, headers } from '../../Globals';
 import { useDispatch, useSelector } from 'react-redux';
-import { userFetchSucceeded, userLoggedIn, userLogInFetch } from './userSlice';
+import { userFetchSucceeded, userLogInFetch } from './userSlice';
 import { setErrors } from '../../errorHandling/errorsSlice';
 
 const SignUp = () => {
