@@ -43,7 +43,7 @@ const CourseCard = () => {
       }) 
     } 
   },[courseStatus, classId, course, dispatch])
-
+  
   const handleRemoveCourse = () => {
 
     dispatch(courseActionLoading());
