@@ -158,8 +158,7 @@ const CourseForm = () => {
   const removeStudent = (studentToRemove) => {
     if (!course || (course && !course.students.find(student => student.id === studentToRemove.student_id))) {
       setFormData({...formData, students: formData.students.filter((student) => student !== studentToRemove)})
-    }else{  
-      debugger    
+    }else{      
       const updatedStudents = formData.students.map( student => {
         if(student.student_id === studentToRemove.student_id) {
           return {id: studentToRemove.student_course_id, _destroy: '1'}
@@ -229,7 +228,6 @@ const CourseForm = () => {
 
   const coursePatch = () => {
     const existingIds = course.students.map(student => student.id)
-    debugger
     const strongParams = {
       course: {
         name: parseInt(formData.name),
@@ -371,9 +369,7 @@ const CourseForm = () => {
             </Col>
           </Row>
           <Row>
-            Students
-          </Row>
-          <Row>
+            <Form.Label>Students</Form.Label>
             {renderStudents}
           </Row>
           <Row>
