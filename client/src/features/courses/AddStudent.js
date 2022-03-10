@@ -2,7 +2,12 @@
 import AddStudentDropDown from "./AddStudentDropDown";
 import { Row, Col, Button } from "react-bootstrap";
 
-const AddStudent = ({addedStudents, removeStudent, updateStudent, student }) => {
+const AddStudent = ({
+  addedStudents, 
+  removeStudent, 
+  updateStudent, 
+  student 
+}) => {
 
   return (
     <Row>
