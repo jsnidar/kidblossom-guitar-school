@@ -60,7 +60,7 @@ class CoursesController < ApplicationController
   end
 
   def destroy
-    course.destroy
+    @course.destroy
   end
 
   private
