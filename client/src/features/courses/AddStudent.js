@@ -7,7 +7,12 @@ const AddStudent = ({addedStudents, removeStudent, updateStudent, student }) => 
   return (
     <Row>
       <Col>
-        <AddStudentDropDown key={student.listId} addedStudents={addedStudents} student={student} updateStudent={updateStudent} />
+        <AddStudentDropDown 
+          key={student.listId} 
+          addedStudents={addedStudents} 
+          student={student} 
+          updateStudent={updateStudent}
+        />
       </Col>
       <Col>
         <Button
