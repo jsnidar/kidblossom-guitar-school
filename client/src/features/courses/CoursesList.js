@@ -1,11 +1,5 @@
-import { useDispatch, useSelector } from "react-redux";
-import { ListGroup, Spinner } from "react-bootstrap";
+import { ListGroup } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { fetchCourses, selectAllCourses } from "./coursesSlice";
-import { useEffect } from "react";
-import { sortByDay } from "../../Globals";
-import ErrorAlert from "../../errorHandling/ErrorAlert";
-
 
 const CoursesList = ({ courses }) =>  {
 
