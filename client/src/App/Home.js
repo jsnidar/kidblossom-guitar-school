@@ -1,4 +1,4 @@
-import { Container, Row, Button } from "react-bootstrap";
+import { Container, Row, Button, Image, Ratio, Col } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { customStyles } from "../Globals"; 
 
@@ -8,6 +8,20 @@ const Home = () => {
   return (
     <Container>
       {customStyles}
+      <Row className="pb-4">
+        <Col sm={1} md={2} lg={3}></Col>
+        <Col sm={10} md={8} lg={6}>
+          <Ratio aspectRatio="16x9">
+            <Image 
+              className="shadow"
+              alt="students"
+              src="/students-in-hall.JPG"
+            >
+            </Image>
+          </Ratio></Col>
+        <Col sm={1} md={2} lg={3}></Col>
+        
+      </Row>
       <Row>
         <h1>KidBlossom Guitar School of Central Texas</h1>
         <p>Welcome to KidBlossom Guitar School of Central Texas.</p>
