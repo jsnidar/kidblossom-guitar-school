@@ -63,6 +63,14 @@ const StudentsContainer = () => {
         {customStyles}
         <h2>Students</h2>
         {content}
+      </Row>
+      <Row className="justify-content-evenly">
+        <Button 
+          variant='yellow' 
+          onClick={() => navigate(`/`)}
+        >
+          Return to Dashboard
+        </Button>
         <Button 
             variant='yellow' 
             onClick={() => navigate(`/students/new`)}
