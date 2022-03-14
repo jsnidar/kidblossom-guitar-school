@@ -20,7 +20,6 @@ const Home = () => {
             </Image>
           </Ratio></Col>
         <Col sm={1} md={2} lg={3}></Col>
-        
       </Row>
       <Row>
         <h1>KidBlossom Guitar School of Central Texas</h1>
