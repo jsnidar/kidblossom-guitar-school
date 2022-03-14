@@ -28,6 +28,15 @@ class UsersController < ApplicationController
     render json: { user: UserSerializer.new(@user), token: @token }
   end
 
+  def update
+    if @user.update(update_user_params)
+      @user.client_account.update(client_params)
+      render json: @user
+    else
+      render json: @user.errors.full_messages, status: :unprocessable_entity
+    end
+  end
+
   def destroy
     @user.destroy
   end
@@ -55,9 +64,24 @@ class UsersController < ApplicationController
         :role
       )
     end
+    def update_user_params
+      params.require(:user).permit(
+        :id,
+        :first_name, 
+        :last_name, 
+        :primary_email_confirmation, 
+        :primary_email, 
+        :primary_phone, 
+        :address, 
+        :city, 
+        :state, 
+        :zip_code,
+        :role
+      )
+    end
 
     def client_params
-      params.require(:client_account).permit(:receive_notifications)
+      params.require(:client_account).permit(:id, :receive_notifications)
     end
 =begin
     params = {
