@@ -6,9 +6,57 @@ Welcome to the Kidblossom Guitar School application. This application has three 
 
 Here is a <a href="https://drive.google.com/file/d/15ONVqw9Ky8QoN0kUwKl0K9BSZQ5pMmxV/view?usp=sharing">link</a> to a video description of the application.
 
+## Roles
+
+### Client
+
+Clients are parents of students enrolled in the school. They have the ability to: 
+<ul>
+ <li>add students to their account</li>
+ <li>update their contact information</li>
+ <li>view their students' instructors</li>
+ <li>view their students' classes</li>
+</ul>
+
+### Instructor
+Instructors teach guitar classes at the school. They have the ability to:
+<ul>
+ <li>create, schedule and edit their classes</li>
+ <li>add and remove students from their classes</li>
+ <li>view their students' information</li>
+</ul>
+
+### Administrator
+Administrators have the ability to create, edit and remove users and classes. They can: 
+<ul>
+ <li>create, schedule and edit classes for all instructors</li>
+ <li>add and remove students from classes</li>
+ <li>create, edit and remove instructors</li>
+ <li>create, edit and remove clients</li>
+ <li>create, edit and remove students</li>
+</ul>
+
 ## Usage
 
 To use the application go to <a href="https://kidblossom-guitar-school.herokuapp.com/">https://kidblossom-guitar-school.herokuapp.com/</a>.
+
+### Sign Up
+
+Clients can create an account by completing the sign up form.
+<img src='client/public/sign-up.png'>
+
+
+### Log In
+<img src='client/public/log-in.png'>
+
+### Update Account Information
+
+Users can update
+### Create/Update/Delete Students
+
+### Create/Update/Delete Courses
+
+### Create/Update/Delete Instructors
 
 
 ## Requirements
