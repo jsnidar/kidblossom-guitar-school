@@ -44,6 +44,12 @@ const CoursesContainer = () => {
       </Row>
       <Row>
         <Button 
+            variant='yellow' 
+            onClick={() => navigate('/')}
+          >
+            Return to Dashboard
+          </Button>
+        <Button 
           variant='yellow' 
           onClick={() => navigate('/classes/new')}
         >
