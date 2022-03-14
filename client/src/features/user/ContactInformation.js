@@ -1,10 +1,11 @@
 
-import { Row } from "react-bootstrap";
+import { Row, Button } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
 const ContactInformation = ({ user }) => {
 
   const formattedPhoneNumber = (phoneNumber) => `${phoneNumber.slice(2, 5)}-${phoneNumber.slice(5, 8)}-${phoneNumber.slice(8)}`
-
+  let navigate = useNavigate()
   return (
     <>
       <Row>
@@ -20,6 +21,14 @@ const ContactInformation = ({ user }) => {
         </Row>
         <p>Phone: {formattedPhoneNumber(user.primary_phone)}</p>
         <p>Email: {user.primary_email}</p>
+        <Row>
+          <Button 
+              variant='yellow' 
+              onClick={() => navigate(`/users/${user.id}/edit`)}
+            >
+              Edit Contact Information
+          </Button>
+        </Row>
       </Row>
     </>
   )
