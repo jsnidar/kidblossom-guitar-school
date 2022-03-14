@@ -14,6 +14,8 @@ const SignUp = () => {
 
   const errors = useSelector(state => state.errors.entities)
   const dispatch = useDispatch()
+  let navigate = useNavigate()
+
 
   const [formData, setFormData ] = useState({
     first_name: '', 
@@ -29,7 +31,6 @@ const SignUp = () => {
     password_confirmation: '',
     receive_notifications: false
   })
-  let navigate = useNavigate()
 
   const handleChange = (e) => {
     setFormData({...formData, [e.target.id]: e.target.value})
@@ -167,7 +168,7 @@ const SignUp = () => {
                   <Form.Control 
                     type="email" 
                     placeholder="name@example.com" 
-                    value={formData.email}
+                    value={formData.primary_email}
                     onChange={handleChange}
                   />
                 </Form.Group>
@@ -178,7 +179,7 @@ const SignUp = () => {
                 <Form.Control 
                   type="email" 
                   placeholder="name@example.com" 
-                  value={formData.email_confirmation}
+                  value={formData.primary_email_confirmation}
                   onChange={handleChange}
                 />
               </Form.Group>
