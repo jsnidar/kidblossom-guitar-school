@@ -17,6 +17,7 @@ import InstructorForm from '../features/instructors/InstructorForm';
 import StudentPage from '../features/students/StudentPage';
 import StudentForm from '../features/students/StudentForm';
 import StudentsContainer from '../features/students/StudentsContainer';
+import EditContactInfoForm from '../features/user/EditContactInfoForm';
 import Dashboard from '../features/user/Dashboard';
 
 function App() {
@@ -53,6 +54,7 @@ function App() {
             } 
           />
           <Route path='/users/:userId' element={<Profile />} />
+          <Route path='/users/:userId/edit' element={<EditContactInfoForm />} />
           
           <Route path='/students' element={<StudentsContainer />} />
           <Route path='/students/:studentId' element={<StudentPage />} />
