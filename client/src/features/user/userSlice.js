@@ -95,6 +95,21 @@ const userSlice = createSlice({
         role: action.payload.role
       }];
     },
+    userUpdated(state, action) { 
+      const user = state.entities.find((user) => user.id === action.payload.id)
+      if (user) {
+          user.id = action.payload.id
+          user.first_name = action.payload.first_name
+          user.last_name = action.payload.last_name
+          user.primary_email = action.payload.primary_email
+          user.primary_phone = action.payload.primary_phone
+          user.address = action.payload.address
+          user.city = action.payload.city
+          user.state = action.payload.state
+          user.zip_code = action.payload.zip_code
+          user.client_account.receive_notifications = action.payload.client_account.receive_notifications
+      }
+    },
     userLogout(state, action) {
       state.entities = action.payload
     },
@@ -105,7 +120,7 @@ const userSlice = createSlice({
 });
 
 // export the action creators
-export const { userLoggedIn, userLogout, userLogoutStatus, userFetchSucceeded, userFetchRejected, usersFetched, userLogInFetch } = userSlice.actions;
+export const { userLoggedIn, userLogout, userLogoutStatus, userFetchSucceeded, userFetchRejected, usersFetched, userLogInFetch, userUpdated } = userSlice.actions;
 
 export default userSlice.reducer;
 
