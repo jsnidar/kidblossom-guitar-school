@@ -18,13 +18,13 @@ export const apiSlice = createApi({
   // The "endpoints" represent operations and requests for this server
   endpoints: builder => ({
     // The `getPosts` endpoint is a "query" operation that returns data
-    getPosts: builder.query({
+    getUser: builder.query({
       // The URL for the request is '/fakeApi/posts'
-      query: () => '/courses'
+      query: () => '/get-current-user'
     })
   })
 })
 
 // Export the auto-generated hook for the `getPosts` query endpoint
-export const { useGetCoursesQuery } = apiSlice
+export const { useGetUserQuery } = apiSlice
 
