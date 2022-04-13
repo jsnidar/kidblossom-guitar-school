@@ -15,7 +15,7 @@ class Course < ApplicationRecord
   
   
   belongs_to :user
-  has_many :student_courses
+  has_many :student_courses, dependent: :destroy
   has_many :students, through: :student_courses
   accepts_nested_attributes_for :student_courses, allow_destroy: true, reject_if: :reject_student_courses
 
