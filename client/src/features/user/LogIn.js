@@ -7,7 +7,8 @@ import { customStyles } from '../../Globals';
 import { logInFetch } from './userSlice';
 
 const LogIn = () => {
-
+  //put this in the error component itself
+  //put errorAlert in App this would allow me to remove it from all components
   const errors = useSelector(state => state.errors.entities)
   const userStatus = useSelector(state => state.user.status)
 
