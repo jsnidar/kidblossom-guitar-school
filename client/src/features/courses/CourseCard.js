@@ -56,6 +56,7 @@ const CourseCard = () => {
       body: JSON.stringify(course.id)
     })
     .then(dispatch(courseRemoved(course.id)))
+    .then(navigate('/classes'))
   }
 
   let timeString
