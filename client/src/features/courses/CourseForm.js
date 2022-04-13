@@ -120,6 +120,8 @@ const CourseForm = () => {
       level: '',
       students: []
     })
+    setAddedStudents([])
+    setListId(1)
     classId ? navigate(`/classes/${classId}`) : navigate('/classes')
   }
 
@@ -147,7 +149,7 @@ const CourseForm = () => {
         added.push(studentObj.student_id)
         return studentObj
       }else{
-        added.push(student.id)
+        added.push(student.student_id)
         return student
       }
     })
@@ -270,6 +272,8 @@ const CourseForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault()
     classId ? coursePatch() : coursePost()
+    setAddedStudents([])
+    setListId(1)
   }
 
   return (
