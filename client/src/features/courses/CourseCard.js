@@ -80,38 +80,39 @@ const CourseCard = () => {
   return (
     <Container>
       {customStyles}
-      {course ? <Row className='border p-1 m-1'>
-        <h3 className='border-bottom'>{formatCourseName(course.name)}</h3>
-        <Col>
-          <p>
-            Meeting Day: {capitalizeWord(course.meeting_day)}
-          </p>
-          <p>
-            Start Date: {formatDate(course.start_date).toDateString()}
-          </p>
-          <p>
-            Time: {formattedTimeString}
-          </p>
-        </Col>
-        <Col>
-          <p>
-            Instructor: {course.instructor_name}
-          </p>
-          <p>
-            Level: {course.course_level}
-          </p>
-          <p>
-            Class Setting: {capitalizeWord(course.setting)}
-          </p>
-          <p>
-            Class Status: {capitalizeWord(course.status)}
-          </p>
-        </Col>
+      {course ? <>
+        <Row className='border p-1 m-1'>
+          <h3 className='border-bottom'>{formatCourseName(course.name)}</h3>
+          <Col>
+            <p>
+              Meeting Day: {capitalizeWord(course.meeting_day)}
+            </p>
+            <p>
+              Start Date: {formatDate(course.start_date).toDateString()}
+            </p>
+            <p>
+              Time: {formattedTimeString}
+            </p>
+          </Col>
+          <Col>
+            <p>
+              Instructor: {course.instructor_name}
+            </p>
+            <p>
+              Level: {course.course_level}
+            </p>
+            <p>
+              Class Setting: {capitalizeWord(course.setting)}
+            </p>
+            <p>
+              Class Status: {capitalizeWord(course.status)}
+            </p>
+          </Col>
+        </Row>
         <Row>Students</Row>
-        <Row>
+        <Row className=''>
           <ListGroup>{renderStudents.length > 0 ? renderStudents: null}</ListGroup>
         </Row>
-
         <Row className="justify-content-evenly">
           <Button 
             variant='yellow' 
@@ -125,8 +126,8 @@ const CourseCard = () => {
             variant='yellow' 
             onClick={() => navigate('/classes')}
           >Return to Courses Page</Button> 
-        </Row>
-      </Row> : null}
+        </Row> 
+      </>: null}
     </Container>
   )
 }
