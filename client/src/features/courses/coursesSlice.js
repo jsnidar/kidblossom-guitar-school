@@ -87,7 +87,8 @@ const coursesSlice = createSlice({
         user_id, 
         course_level, 
         user, 
-        students
+        students, 
+        course_list_label
       } = action.payload
 
       state.entities = [...state.entities, {
@@ -101,7 +102,8 @@ const coursesSlice = createSlice({
         user_id: user_id,
         course_level: course_level,
         instructor_name: `${user.first_name} ${user.last_name}`,
-        students: students
+        students: students,
+        course_list_label: course_list_label
       }]
     },
     courseRemoved(state, action) {
