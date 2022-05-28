@@ -16,6 +16,7 @@ const CourseForm = () => {
   let navigate = useNavigate()
   const { classId } = useParams()
 
+  const user = useSelector(state => user)
   const errors = useSelector(state => state.errors.entities)
   const students = useSelector(selectAllStudents)
   const studentStatus = useSelector(state => state.students.status)
@@ -218,6 +219,7 @@ const CourseForm = () => {
           dispatch(courseAdded(course))
           dispatch(setErrors([]));
           navigate(`/classes/${course.id}`)
+          dispatch(coursesFetchSucceeded())
         })
       }else{
         res.json().then(errors => {
